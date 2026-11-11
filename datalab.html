@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DataLab · Le collectif des statisticiens du Burundi</title>
+<meta name="theme-color" content="#070e1a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2322d3ee'/><text x='50' y='70' font-size='56' font-weight='800' text-anchor='middle' fill='%23070e1a' font-family='Arial'>D</text></svg>">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   1. VARIABLES & THEME SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  color-scheme:dark;
+  --hero-bg-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&auto=format&fit=crop&q=80');
+  --bg:#070e1a;--bg2:#0f1b2e;--bg3:#16273f;
+  --tx:#f4f6fa;--mu:#94a3b8;
+  --c-cy:#22d3ee;--c-pu:#a855f7;--c-pi:#ec4899;
+  --c-ye:#fbbf24;--c-or:#f97316;--c-gr:#10b981;
+  --c-bl:#3b82f6;--c-in:#6366f1;--c-rd:#ef4444;--c-te:#14b8a6;
+  --border:#1e3050;--glow:rgba(34,211,238,.3);
+  --card:rgba(15,27,46,.72);--shadow:0 16px 40px rgba(0,0,0,.35);
+  --r-sm:6px;--r-md:12px;--r-lg:20px;--r-pill:99px;
+}
+[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f8fafc;--bg2:#ffffff;--bg3:#f1f5f9;
+  --tx:#0f172a;--mu:#475569;
+  --c-cy:#0891b2;--c-pu:#7c3aed;--c-pi:#db2777;
+  --c-ye:#ca8a04;--c-or:#ea580c;--c-gr:#059669;
+  --c-bl:#2563eb;--c-in:#4f46e5;--c-rd:#dc2626;--c-te:#0d9488;
+  --border:#e2e8f0;--glow:rgba(8,145,178,.15);
+  --card:rgba(255,255,255,.95);--shadow:0 16px 40px rgba(15,23,42,.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. ZONES (identités par rôle)
+   ═══════════════════════════════════════════════════════════════ */
+body[data-zone="public"]{--ac-a:#22d3ee;--ac-b:#a855f7;--ac-c:#ec4899;--card-r:20px;--btn-r:12px;--card-bd:1px solid #1e3050;--card-bg:rgba(15,27,46,.72);--zone-tint:rgba(34,211,238,.08)}
+body[data-zone="membre"]{--ac-a:#fbbf24;--ac-b:#f97316;--ac-c:#ef4444;--card-r:10px;--btn-r:8px;--card-bd:2px solid rgba(251,191,36,.45);--card-bg:rgba(45,25,5,.55);--zone-tint:rgba(251,191,36,.08)}
+body[data-zone="apprenant"]{--ac-a:#10b981;--ac-b:#22d3ee;--ac-c:#14b8a6;--card-r:14px;--btn-r:10px;--card-bd:1.5px dashed rgba(16,185,129,.45);--card-bg:rgba(10,28,26,.55);--zone-tint:rgba(16,185,129,.08)}
+body[data-zone="partenaire"]{--ac-a:#3b82f6;--ac-b:#6366f1;--ac-c:#8b5cf6;--card-r:16px;--btn-r:10px;--card-bd:1px solid rgba(59,130,246,.5);--card-bg:rgba(10,20,45,.55);--zone-tint:rgba(59,130,246,.08)}
+body[data-zone="admin"]{--ac-a:#ef4444;--ac-b:#fbbf24;--ac-c:#f97316;--card-r:4px;--btn-r:4px;--card-bd:1px solid rgba(239,68,68,.4);--card-bg:rgba(40,10,10,.5);--zone-tint:rgba(239,68,68,.08)}
+
+html[data-theme="light"] body[data-zone="public"]{--card-bg:rgba(255,255,255,.95);--card-bd:1px solid #e2e8f0}
+html[data-theme="light"] body[data-zone="membre"]{--card-bg:#fff7ed;--card-bd:2px solid rgba(202,138,4,.5)}
+html[data-theme="light"] body[data-zone="apprenant"]{--card-bg:#ecfdf5;--card-bd:1.5px dashed rgba(5,150,105,.5)}
+html[data-theme="light"] body[data-zone="partenaire"]{--card-bg:#eff6ff;--card-bd:1px solid rgba(37,99,235,.4)}
+html[data-theme="light"] body[data-zone="admin"]{--card-bg:#fef2f2;--card-bd:1px solid rgba(220,38,38,.4)}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.6;overflow-x:hidden;min-height:100vh;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased}
+a{color:var(--c-cy);text-decoration:none;transition:color .2s}
+a:hover{color:var(--c-pi)}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--ac-a);outline-offset:3px;border-radius:6px}
+canvas#bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--ac-a),var(--ac-b),var(--ac-c));z-index:999;transition:width .3s ease,opacity .3s;box-shadow:0 0 12px var(--glow)}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. HEADER
+   ═══════════════════════════════════════════════════════════════ */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:10px 4vw;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;transition:.3s}
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--tx);flex:none}
+.logo-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:18px;box-shadow:0 0 22px var(--glow);transition:transform .3s}
+.logo:hover .logo-icon{transform:rotate(-8deg) scale(1.05)}
+nav{display:flex;gap:2px;align-items:center;flex-wrap:wrap;flex:1}
+nav a{padding:7px 9px;border-radius:8px;font-size:12px;font-weight:500;color:var(--mu);position:relative;transition:.2s}
+nav a:hover{background:var(--bg3);color:var(--tx)}
+nav a.active{color:var(--ac-a);background:var(--zone-tint)}
+nav a.active::after{content:"";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:14px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--ac-a),var(--ac-b))}
+.header-right{display:flex;gap:7px;align-items:center;flex:none}
+.icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:15px;background:var(--bg3);border:1px solid var(--border);transition:.2s}
+.icon-btn:hover{border-color:var(--ac-a);color:var(--ac-a);transform:translateY(-2px)}
+.btn-login{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-pill);background:linear-gradient(135deg,var(--ac-a),var(--ac-b));color:#0a1222;font-weight:700;font-size:12.5px;box-shadow:0 6px 20px var(--glow);transition:.25s}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 28px var(--glow);color:#0a1222}
+.lang-dd{position:relative}
+.lang-dd-btn{display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--tx);font-size:12px;font-weight:600;transition:.2s}
+.lang-dd-btn:hover{border-color:var(--ac-a)}
+.lang-dd-btn .caret{font-size:9px;opacity:.7;transition:.2s}
+.lang-dd.open .lang-dd-btn .caret{transform:rotate(180deg)}
+.lang-dd-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;min-width:160px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow);padding:6px;z-index:150;animation:ddIn .2s ease}
+.lang-dd.open .lang-dd-menu{display:block}
+@keyframes ddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lang-dd-menu button{width:100%;padding:9px 12px;border-radius:6px;font-size:13px;text-align:left;display:flex;justify-content:space-between;color:var(--tx);transition:.15s}
+.lang-dd-menu button:hover{background:var(--zone-tint);color:var(--ac-a)}
+.lang-dd-menu button.active{background:var(--zone-tint);color:var(--ac-a);font-weight:700}
+.lang-dd-menu button.active::after{content:"✓";color:var(--ac-a)}
+.user-menu{position:relative;display:none}
+body.has-session .user-menu{display:block}
+body.has-session .btn-login{display:none}
+.user-menu-btn{display:flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border-radius:var(--r-pill);background:var(--bg3);border:1px solid var(--border);transition:.2s}
+.user-menu-btn:hover{border-color:var(--ac-a)}
+.user-menu-btn .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:16px}
+.user-menu-btn .info{text-align:left}
+.user-menu-btn .nm{font-size:12.5px;font-weight:700;line-height:1.1}
+.user-menu-btn .rl{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.user-menu-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;min-width:220px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow);padding:6px;z-index:150}
+.user-menu.open .user-menu-menu{display:block}
+.user-menu-menu a,.user-menu-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:6px;font-size:13px;color:var(--tx);text-align:left;transition:.15s}
+.user-menu-menu a:hover,.user-menu-menu button:hover{background:var(--zone-tint);color:var(--ac-a)}
+.user-menu-menu .divider{height:1px;background:var(--border);margin:4px 0}
+#menu-toggle{display:none}
+.zone-badge{display:none;align-items:center;padding:4px 12px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+body[data-zone="public"] .zone-badge{display:inline-flex;background:rgba(34,211,238,.15);color:#22d3ee;border:1px solid rgba(34,211,238,.4);border-radius:99px}
+body[data-zone="membre"] .zone-badge{display:inline-flex;background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.4);border-radius:6px}
+body[data-zone="apprenant"] .zone-badge{display:inline-flex;background:rgba(16,185,129,.15);color:#10b981;border:1.5px dashed rgba(16,185,129,.5);border-radius:6px}
+body[data-zone="partenaire"] .zone-badge{display:inline-flex;background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.5);border-radius:8px}
+body[data-zone="admin"] .zone-badge{display:inline-flex;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.4);border-radius:3px}
+body[data-zone="public"] .zone-badge::after{content:"Public"}
+body[data-zone="membre"] .zone-badge::after{content:"Équipe"}
+body[data-zone="apprenant"] .zone-badge::after{content:"Apprenant"}
+body[data-zone="partenaire"] .zone-badge::after{content:"Partenaire"}
+body[data-zone="admin"] .zone-badge::after{content:"Admin"}
+[data-theme="light"] body[data-zone="public"] .zone-badge{background:#cffafe;color:#0e7490;border-color:#0891b2}
+[data-theme="light"] body[data-zone="membre"] .zone-badge{background:#fef3c7;color:#854d0e;border-color:#ca8a04}
+[data-theme="light"] body[data-zone="apprenant"] .zone-badge{background:#d1fae5;color:#065f46;border-color:#059669}
+[data-theme="light"] body[data-zone="partenaire"] .zone-badge{background:#dbeafe;color:#1e40af;border-color:#2563eb}
+[data-theme="light"] body[data-zone="admin"] .zone-badge{background:#fee2e2;color:#991b1b;border-color:#dc2626}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. MENU MOBILE
+   ═══════════════════════════════════════════════════════════════ */
+.mobile-menu{display:none;position:fixed;inset:60px 0 0 0;background:color-mix(in srgb,var(--bg) 98%,transparent);backdrop-filter:blur(20px);z-index:99;padding:20px 5vw;overflow-y:auto;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.mobile-menu.on{display:block}
+.mobile-menu a{display:flex;align-items:center;justify-content:space-between;padding:13px 0;font-size:15px;font-weight:600;color:var(--tx);border-bottom:1px solid var(--border)}
+.mobile-menu a::after{content:"→";color:var(--mu);font-weight:400}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. PAGES
+   ═══════════════════════════════════════════════════════════════ */
+main{padding-top:60px;min-height:calc(100vh - 60px)}
+.page{display:none}
+.page.active{display:block;animation:pageIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+section.block{padding:60px 5vw;position:relative}
+.container{max-width:1200px;margin:0 auto}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. TYPO
+   ═══════════════════════════════════════════════════════════════ */
+.tag{display:inline-block;padding:6px 14px;border-radius:99px;background:var(--zone-tint);border:1px solid var(--ac-a);color:var(--ac-a);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+h1{font-size:clamp(32px,5.5vw,68px);line-height:1.05;letter-spacing:-2px;margin-bottom:20px;font-weight:800}
+h1 .grad{background:linear-gradient(135deg,var(--ac-a) 0%,var(--ac-b) 50%,var(--ac-c) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% auto;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+h2{font-size:clamp(26px,3.8vw,42px);line-height:1.15;margin-bottom:14px;font-weight:800;letter-spacing:-1px}
+h2::after{content:"";display:block;width:56px;height:4px;margin-top:12px;background:linear-gradient(90deg,var(--ac-a),var(--ac-b));border-radius:2px}
+h3{font-size:clamp(17px,2.1vw,22px);margin-bottom:8px;font-weight:700}
+h4{font-size:clamp(14px,1.6vw,17px);font-weight:700}
+p{font-size:clamp(14.5px,1.5vw,17px);color:var(--mu);margin-bottom:14px}
+body[data-zone="membre"] h2,body[data-zone="apprenant"] h2,body[data-zone="partenaire"] h2,body[data-zone="admin"] h2{text-align:left;padding-left:14px;border-left:4px solid var(--ac-a)}
+body[data-zone="membre"] h2::after,body[data-zone="apprenant"] h2::after,body[data-zone="partenaire"] h2::after,body[data-zone="admin"] h2::after{display:none}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. HERO
+   ═══════════════════════════════════════════════════════════════ */
+.hero{position:relative;overflow:hidden;min-height:calc(100vh - 60px);display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center;padding:60px 5vw}
+.hero-photo-bg{position:absolute;inset:0;background-image:var(--hero-bg-image);background-size:cover;background-position:center;animation:kenBurns 24s ease-in-out infinite alternate;opacity:.35;z-index:0;filter:saturate(1.1) contrast(1.05)}
+@keyframes kenBurns{0%{transform:scale(1) translate(0,0)}50%{transform:scale(1.08) translate(-1.5%,-1%)}100%{transform:scale(1.15) translate(-2.5%,-2%)}}
+.hero-bg-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(7,14,26,.97) 0%,rgba(7,14,26,.85) 40%,rgba(15,27,46,.7) 70%,rgba(34,211,238,.25) 100%)}
+[data-theme="light"] .hero-bg-overlay{background:linear-gradient(135deg,rgba(248,250,252,.96) 0%,rgba(248,250,252,.85) 50%,rgba(8,145,178,.15) 100%)}
+.hero > div:not(.hero-photo-bg):not(.hero-bg-overlay){position:relative;z-index:2}
+.hero p{font-size:clamp(15px,1.8vw,19px);max-width:600px;margin-bottom:32px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+.btn{padding:12px 24px;border-radius:var(--btn-r);font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:.25s;border:1px solid transparent}
+.btn-primary{background:linear-gradient(135deg,var(--ac-a),var(--ac-b));color:#0a1222;box-shadow:0 8px 24px var(--glow)}
+body[data-zone="admin"] .btn-primary,body[data-zone="membre"] .btn-primary{color:#1a0a00}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 32px var(--glow);color:#0a1222}
+.btn-ghost{background:var(--bg2);border-color:var(--border);color:var(--tx)}
+.btn-ghost:hover{border-color:var(--ac-a);color:var(--ac-a);transform:translateY(-2px)}
+.btn-danger{background:var(--c-rd);color:#fff}
+.btn-danger:hover{background:#dc2626;transform:translateY(-2px)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+.hero-visual{display:grid;place-items:center;position:relative}
+.hero-orb{width:min(400px,80%);aspect-ratio:1;background:radial-gradient(circle,var(--ac-a) 0%,var(--ac-b) 50%,transparent 70%);border-radius:50%;filter:blur(40px);opacity:.35;animation:pulse 4s ease-in-out infinite}
+.hero-emoji{position:absolute;font-size:min(180px,40vw);animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-20px) rotate(-5deg)}}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.5}}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. STATS & SECTION HEAD
+   ═══════════════════════════════════════════════════════════════ */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:40px}
+.stat{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:20px 16px;text-align:center;transition:.3s;position:relative;overflow:hidden;backdrop-filter:blur(10px)}
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ac-a),var(--ac-b))}
+.stat:hover{transform:translateY(-6px);border-color:var(--ac-a);box-shadow:var(--shadow)}
+.stat-num{font-size:clamp(28px,4vw,40px);font-weight:800;color:var(--ac-a);font-family:Georgia,serif;line-height:1;margin-bottom:6px}
+.stat-lbl{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em}
+.section-head{text-align:center;margin-bottom:44px}
+.section-head h2::after{margin:12px auto 0}
+.section-head p{max-width:620px;margin:0 auto}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. MVV (Mission / Vision / Valeurs)
+   ═══════════════════════════════════════════════════════════════ */
+.mvv-section{padding:70px 5vw}
+.mvv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px}
+.mvv-card{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:30px;position:relative;overflow:hidden;transition:.3s;backdrop-filter:blur(10px)}
+.mvv-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ac-a),var(--ac-b))}
+.mvv-card:hover{transform:translateY(-5px);border-color:var(--ac-a);box-shadow:var(--shadow)}
+.mvv-icon{width:58px;height:58px;border-radius:var(--btn-r);background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:27px;margin-bottom:18px;box-shadow:0 6px 20px var(--glow)}
+.mvv-card h3{font-size:19px;margin-bottom:10px;color:var(--tx)}
+.mvv-card p{font-size:14px;margin-bottom:0;line-height:1.6}
+.values-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.value-pill{padding:6px 13px;border-radius:99px;font-size:11.5px;font-weight:600;background:var(--zone-tint);border:1px solid var(--ac-a);color:var(--ac-a)}
+[data-theme="light"] .value-pill{background:#ecfeff;color:#0e7490;border-color:#0891b2}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. CARTES DIVERSIFIÉES (10 variantes + fixes light mode)
+   ═══════════════════════════════════════════════════════════════ */
+.card{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:22px;transition:.3s;position:relative;overflow:hidden;backdrop-filter:blur(10px)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+
+.card-primary{border-color:rgba(34,211,238,.4);background:linear-gradient(135deg,rgba(34,211,238,.06),var(--card-bg))}
+.card-primary::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#22d3ee,#0ea5e9)}
+.card-purple{border-color:rgba(168,85,247,.4);background:linear-gradient(135deg,rgba(168,85,247,.06),var(--card-bg))}
+.card-purple::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a855f7,#7c3aed)}
+.card-pink{border-color:rgba(236,72,153,.4);background:linear-gradient(135deg,rgba(236,72,153,.06),var(--card-bg))}
+.card-pink::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ec4899,#db2777)}
+.card-amber{border-color:rgba(251,191,36,.4);background:linear-gradient(135deg,rgba(251,191,36,.06),var(--card-bg))}
+.card-amber::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+.card-orange{border-color:rgba(249,115,22,.4);background:linear-gradient(135deg,rgba(249,115,22,.06),var(--card-bg))}
+.card-orange::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#ea580c)}
+.card-emerald{border-color:rgba(16,185,129,.4);background:linear-gradient(135deg,rgba(16,185,129,.06),var(--card-bg))}
+.card-emerald::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#10b981,#059669)}
+.card-blue{border-color:rgba(59,130,246,.4);background:linear-gradient(135deg,rgba(59,130,246,.06),var(--card-bg))}
+.card-blue::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3b82f6,#2563eb)}
+.card-indigo{border-color:rgba(99,102,241,.4);background:linear-gradient(135deg,rgba(99,102,241,.06),var(--card-bg))}
+.card-indigo::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#4f46e5)}
+.card-red{border-color:rgba(239,68,68,.4);background:linear-gradient(135deg,rgba(239,68,68,.06),var(--card-bg))}
+.card-red::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ef4444,#dc2626)}
+.card-teal{border-color:rgba(20,184,166,.4);background:linear-gradient(135deg,rgba(20,184,166,.06),var(--card-bg))}
+.card-teal::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#14b8a6,#0d9488)}
+
+/* FIXES MODE CLAIR — couleurs solides et textes contrastés */
+[data-theme="light"] .card-primary{background:linear-gradient(135deg,#ecfeff,#fff);border-color:#0891b2}
+[data-theme="light"] .card-purple{background:linear-gradient(135deg,#faf5ff,#fff);border-color:#7c3aed}
+[data-theme="light"] .card-pink{background:linear-gradient(135deg,#fdf2f8,#fff);border-color:#db2777}
+[data-theme="light"] .card-amber{background:linear-gradient(135deg,#fefce8,#fff);border-color:#ca8a04}
+[data-theme="light"] .card-orange{background:linear-gradient(135deg,#fff7ed,#fff);border-color:#ea580c}
+[data-theme="light"] .card-emerald{background:linear-gradient(135deg,#ecfdf5,#fff);border-color:#059669}
+[data-theme="light"] .card-blue{background:linear-gradient(135deg,#eff6ff,#fff);border-color:#2563eb}
+[data-theme="light"] .card-indigo{background:linear-gradient(135deg,#eef2ff,#fff);border-color:#4f46e5}
+[data-theme="light"] .card-red{background:linear-gradient(135deg,#fef2f2,#fff);border-color:#dc2626}
+[data-theme="light"] .card-teal{background:linear-gradient(135deg,#f0fdfa,#fff);border-color:#0d9488}
+[data-theme="light"] .card h3,[data-theme="light"] .card h4{color:#0f172a}
+[data-theme="light"] .card p{color:#475569}
+
+/* Cadres spéciaux */
+.frame-dashed{border-style:dashed!important;border-width:2px!important}
+.frame-double{border-style:double!important;border-width:4px!important}
+.frame-glow{box-shadow:0 0 0 1px var(--ac-a),0 0 24px var(--glow)}
+.frame-corner{position:relative}
+.frame-corner::after{content:"";position:absolute;top:8px;right:8px;width:20px;height:20px;border-top:2px solid var(--ac-a);border-right:2px solid var(--ac-a);border-radius:0 4px 0 0}
+.frame-corner::before{content:"";position:absolute;bottom:8px;left:8px;width:20px;height:20px;border-bottom:2px solid var(--ac-a);border-left:2px solid var(--ac-a);border-radius:0 0 0 4px}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. TEAM / MEMBERS
+   ═══════════════════════════════════════════════════════════════ */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+.member{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:26px 22px;text-align:center;transition:.3s;position:relative;overflow:hidden;backdrop-filter:blur(10px);cursor:pointer}
+.member::before{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 0%,var(--glow),transparent 70%);transition:opacity .3s}
+.member:hover{transform:translateY(-8px);border-color:var(--ac-a);box-shadow:var(--shadow)}
+.member:hover::before{opacity:1}
+.member-avatar{width:86px;height:86px;border-radius:50%;margin:0 auto 16px;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:36px;box-shadow:0 0 24px var(--glow);position:relative}
+.member h3{margin-bottom:4px;position:relative;color:var(--tx)}
+.member-role{color:var(--ac-a);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;position:relative}
+.member-bio{font-size:13.5px;color:var(--mu);margin-bottom:16px;position:relative}
+.member-skills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative}
+.skill{padding:4px 10px;border-radius:99px;font-size:11px;background:var(--bg3);border:1px solid var(--border);color:var(--mu);font-weight:600}
+[data-theme="light"] .skill{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. FILTERS (avec catégories en pills)
+   ═══════════════════════════════════════════════════════════════ */
+.filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.filter-btn{padding:8px 16px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);color:var(--mu);font-size:12.5px;font-weight:600;transition:.25s}
+.filter-btn:hover{border-color:var(--ac-a);color:var(--tx)}
+.filter-btn.active{background:linear-gradient(135deg,var(--ac-a),var(--ac-b));color:#0a1222;border-color:transparent;box-shadow:0 6px 20px var(--glow)}
+[data-theme="light"] .filter-btn{background:#fff;color:#475569;border-color:#cbd5e1}
+[data-theme="light"] .filter-btn:hover{color:#0891b2;border-color:#0891b2}
+[data-theme="light"] .filter-btn.active{background:linear-gradient(135deg,#0891b2,#7c3aed);color:#fff}
+
+/* ═══════════════════════════════════════════════════════════════
+   14. GRILLES (projets, cours, vidéos, photos, etc.)
+   ═══════════════════════════════════════════════════════════════ */
+.projects-grid,.courses-grid,.videos-grid,.articles-grid,.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.project,.course,.video-card,.article,.news-item,.ressource-card{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);overflow:hidden;transition:.3s;display:flex;flex-direction:column;backdrop-filter:blur(10px);cursor:pointer}
+.project:hover,.course:hover,.video-card:hover,.article:hover,.news-item:hover,.ressource-card:hover{transform:translateY(-5px);border-color:var(--ac-a);box-shadow:var(--shadow)}
+.project-cover{height:160px;background:linear-gradient(135deg,var(--bg3),var(--bg));display:grid;place-items:center;font-size:58px;position:relative;overflow:hidden}
+.project-cover::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,var(--glow),transparent 60%)}
+[data-theme="light"] .project-cover{background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}
+.project-body,.course-body,.article-body,.news-body{padding:20px;display:flex;flex-direction:column;flex:1}
+.project-cat,.course-cat{font-size:11px;color:var(--ac-a);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.project h3,.course h3,.article h3,.video-body h3{font-size:17px;margin-bottom:8px;color:var(--tx)}
+.project p,.course p,.article p{font-size:13.5px;margin-bottom:14px;line-height:1.5;flex:1}
+.project-tags,.course-meta,.article-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;font-size:11.5px;color:var(--mu)}
+.project-tags span,.course-meta span{padding:3px 9px;border-radius:99px;background:var(--bg3);border:1px solid var(--border);font-weight:600}
+[data-theme="light"] .project-tags span,[data-theme="light"] .course-meta span{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+.course-level{font-weight:700}
+.course-level.debutant{color:#10b981}
+.course-level.intermediaire{color:#fbbf24}
+.course-level.avance{color:#ef4444}
+[data-theme="light"] .course-level.debutant{color:#047857}
+[data-theme="light"] .course-level.intermediaire{color:#a16207}
+[data-theme="light"] .course-level.avance{color:#b91c1c}
+.project-links{display:flex;gap:8px;font-size:12.5px;flex-wrap:wrap}
+.project-links a{padding:5px 12px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);font-weight:600;color:var(--tx)}
+.project-links a:hover{background:var(--ac-a);color:#0a1222;border-color:var(--ac-a)}
+[data-theme="light"] .project-links a{background:#f1f5f9;color:#0f172a;border-color:#cbd5e1}
+
+/* Vidéos */
+.video-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,var(--bg3),var(--bg2));position:relative;display:grid;place-items:center;overflow:hidden}
+[data-theme="light"] .video-thumb{background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}
+.video-thumb .emoji{font-size:60px;opacity:.5;transition:.3s}
+.video-card:hover .video-thumb .emoji{transform:scale(1.1);opacity:.7}
+.video-play{position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(236,72,153,.9);display:grid;place-items:center;font-size:22px;color:#fff;transition:.3s;backdrop-filter:blur(4px)}
+.video-card:hover .video-play{transform:scale(1.15);background:#ec4899}
+.video-duration{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.85);color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.video-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.video-meta{font-size:11.5px;color:var(--mu);display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+
+/* Photos */
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;grid-auto-flow:dense}
+.photo-card{aspect-ratio:1;border-radius:var(--card-r);overflow:hidden;background:var(--bg3);position:relative;cursor:pointer;border:var(--card-bd);transition:.3s}
+.photo-card:hover{transform:scale(1.02);border-color:var(--ac-a);box-shadow:var(--shadow)}
+.photo-card.wide{grid-column:span 2;aspect-ratio:2/1}
+.photo-card.tall{grid-row:span 2;aspect-ratio:1/2}
+.photo-visual{width:100%;height:100%;display:grid;place-items:center;font-size:56px;transition:.4s;background:linear-gradient(135deg,var(--bg3),var(--bg2))}
+[data-theme="light"] .photo-visual{background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}
+.photo-card:hover .photo-visual{transform:scale(1.1)}
+.photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.9));display:flex;flex-direction:column;justify-content:flex-end;padding:14px;opacity:0;transition:.3s}
+.photo-card:hover .photo-overlay{opacity:1}
+.photo-overlay h4{color:#fff;font-size:14px;margin-bottom:3px;line-height:1.25}
+.photo-overlay span{color:#f9a8d4;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+
+/* ═══════════════════════════════════════════════════════════════
+   15. NEWS / CATEGORIES colorées (10 catégories)
+   ═══════════════════════════════════════════════════════════════ */
+.news-item{position:relative;padding:22px 22px 22px 30px;display:flex;flex-direction:column;cursor:pointer}
+.news-item::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:5px;transition:.3s}
+.news-item.cat-collectif::before{background:linear-gradient(180deg,#22d3ee,#0ea5e9)}
+.news-item.cat-data::before{background:linear-gradient(180deg,#a855f7,#7c3aed)}
+.news-item.cat-formation::before{background:linear-gradient(180deg,#10b981,#059669)}
+.news-item.cat-partenariat::before{background:linear-gradient(180deg,#fbbf24,#f59e0b)}
+.news-item.cat-evenement::before{background:linear-gradient(180deg,#ec4899,#db2777)}
+.news-item.cat-prix::before{background:linear-gradient(180deg,#ef4444,#dc2626)}
+.news-item.cat-communaute::before{background:linear-gradient(180deg,#3b82f6,#2563eb)}
+.news-item.cat-ressources::before{background:linear-gradient(180deg,#14b8a6,#0d9488)}
+.news-item.cat-interview::before{background:linear-gradient(180deg,#f97316,#ea580c)}
+.news-item.cat-annonce::before{background:linear-gradient(180deg,#6366f1,#4f46e5)}
+.news-item:hover::before{top:8px;bottom:8px}
+.news-meta{display:flex;gap:10px;font-size:11.5px;color:var(--mu);margin-bottom:10px;flex-wrap:wrap}
+.news-cat{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;width:fit-content}
+.news-cat.collectif{background:rgba(34,211,238,.15);color:#22d3ee}
+.news-cat.data{background:rgba(168,85,247,.15);color:#a855f7}
+.news-cat.formation{background:rgba(16,185,129,.15);color:#10b981}
+.news-cat.partenariat{background:rgba(251,191,36,.15);color:#fbbf24}
+.news-cat.evenement{background:rgba(236,72,153,.15);color:#ec4899}
+.news-cat.prix{background:rgba(239,68,68,.15);color:#ef4444}
+.news-cat.communaute{background:rgba(59,130,246,.15);color:#3b82f6}
+.news-cat.ressources{background:rgba(20,184,166,.15);color:#14b8a6}
+.news-cat.interview{background:rgba(249,115,22,.15);color:#f97316}
+.news-cat.annonce{background:rgba(99,102,241,.15);color:#6366f1}
+/* FIXES light mode catégories */
+[data-theme="light"] .news-cat.collectif{background:#cffafe;color:#0e7490}
+[data-theme="light"] .news-cat.data{background:#f3e8ff;color:#6b21a8}
+[data-theme="light"] .news-cat.formation{background:#d1fae5;color:#065f46}
+[data-theme="light"] .news-cat.partenariat{background:#fef3c7;color:#854d0e}
+[data-theme="light"] .news-cat.evenement{background:#fce7f3;color:#9d174d}
+[data-theme="light"] .news-cat.prix{background:#fee2e2;color:#991b1b}
+[data-theme="light"] .news-cat.communaute{background:#dbeafe;color:#1e40af}
+[data-theme="light"] .news-cat.ressources{background:#ccfbf1;color:#115e59}
+[data-theme="light"] .news-cat.interview{background:#ffedd5;color:#9a3412}
+[data-theme="light"] .news-cat.annonce{background:#e0e7ff;color:#3730a3}
+
+/* ═══════════════════════════════════════════════════════════════
+   16. ACTIONS (Éditer/Supprimer)
+   ═══════════════════════════════════════════════════════════════ */
+.action-bar{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.action-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:var(--btn-r);font-size:11.5px;font-weight:700;border:1px solid var(--border);color:var(--mu);transition:.2s}
+.action-btn:hover{transform:translateY(-1px)}
+.action-btn.edit{border-color:rgba(59,130,246,.5);color:#3b82f6}
+.action-btn.edit:hover{background:rgba(59,130,246,.15)}
+.action-btn.delete{border-color:rgba(239,68,68,.5);color:#ef4444}
+.action-btn.delete:hover{background:rgba(239,68,68,.15)}
+.action-btn.view{border-color:rgba(34,211,238,.5);color:#22d3ee}
+.action-btn.view:hover{background:rgba(34,211,238,.15)}
+.action-btn.approve{border-color:rgba(16,185,129,.5);color:#10b981}
+.action-btn.approve:hover{background:rgba(16,185,129,.15)}
+[data-theme="light"] .action-btn.edit{color:#2563eb;border-color:#93c5fd}
+[data-theme="light"] .action-btn.delete{color:#dc2626;border-color:#fca5a5}
+[data-theme="light"] .action-btn.view{color:#0891b2;border-color:#67e8f9}
+[data-theme="light"] .action-btn.approve{color:#059669;border-color:#6ee7b7}
+
+/* ═══════════════════════════════════════════════════════════════
+   17. DETAIL PAGES (sous-pages cliquables)
+   ═══════════════════════════════════════════════════════════════ */
+.detail-hero{padding:50px 5vw 30px;background:linear-gradient(135deg,var(--zone-tint),transparent 60%);border-bottom:1px solid var(--border)}
+.detail-hero .container{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.detail-icon{width:90px;height:90px;border-radius:var(--card-r);background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:44px;flex:none;box-shadow:0 8px 24px var(--glow)}
+.detail-info{flex:1;min-width:250px}
+.detail-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--mu);margin-bottom:12px}
+.detail-meta span{padding:3px 10px;border-radius:99px;background:var(--bg3);border:1px solid var(--border);font-weight:600}
+[data-theme="light"] .detail-meta span{background:#f1f5f9;color:#475569;border-color:#cbd5e1}
+.breadcrumb{display:flex;gap:6px;font-size:12px;color:var(--mu);margin-bottom:14px;flex-wrap:wrap}
+.breadcrumb a{color:var(--ac-a)}
+.breadcrumb span{opacity:.6}
+.detail-body{padding:40px 5vw 60px}
+.detail-body .container{display:grid;grid-template-columns:1fr 300px;gap:40px;max-width:1200px}
+.detail-content{min-width:0}
+.detail-content h2{border:none;padding:0;text-align:left;margin-top:30px}
+.detail-content h2::after{margin-left:0}
+.detail-content h3{margin-top:24px;color:var(--ac-a)}
+.detail-content p{font-size:15px;line-height:1.7}
+.detail-content ul,.detail-content ol{margin:14px 0 14px 24px;color:var(--mu)}
+.detail-content li{margin-bottom:6px;font-size:14.5px}
+.detail-content .project-tags{margin:14px 0}
+.detail-sidebar{display:flex;flex-direction:column;gap:16px}
+.sidebar-card{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:18px}
+.sidebar-card h4{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:12px;font-weight:700}
+.sidebar-list{display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.sidebar-list a{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);color:var(--tx)}
+.sidebar-list a:last-child{border-bottom:none}
+.sidebar-list a:hover{color:var(--ac-a)}
+
+/* ═══════════════════════════════════════════════════════════════
+   18. AUTH
+   ═══════════════════════════════════════════════════════════════ */
+.auth-wrap{max-width:480px;margin:50px auto;padding:0 20px}
+.auth-card{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:32px;border-width:2px}
+.auth-card h2{padding:0!important;border:none!important;text-align:center!important;font-size:26px!important;margin-bottom:6px!important}
+.auth-card h2::after{display:none!important}
+.auth-sub{text-align:center;font-size:13.5px;margin-bottom:22px}
+.auth-form-msg{padding:11px 14px;border-radius:var(--btn-r);margin-bottom:14px;font-size:13px;display:none}
+.auth-form-msg.error{background:rgba(239,68,68,.15);border:1px solid var(--c-rd);color:var(--c-rd);display:block}
+.auth-form-msg.success{background:rgba(16,185,129,.15);border:1px solid var(--c-gr);color:var(--c-gr);display:block}
+[data-theme="light"] .auth-form-msg.error{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+[data-theme="light"] .auth-form-msg.success{background:#d1fae5;border-color:#059669;color:#065f46}
+.auth-demo{display:flex;gap:8px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--border);flex-wrap:wrap}
+.auth-demo .demo-title{width:100%;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px}
+.auth-demo button{flex:1;min-width:130px;padding:10px 12px;border-radius:var(--btn-r);font-size:11.5px;font-weight:700;border:1px solid var(--border);transition:.2s}
+.auth-demo button:hover{transform:translateY(-2px);border-color:var(--ac-a);color:var(--ac-a)}
+.auth-demo .demo-member{border-color:rgba(251,191,36,.5);color:#fbbf24}
+.auth-demo .demo-learner{border-color:rgba(16,185,129,.5);color:#10b981}
+.auth-demo .demo-partner{border-color:rgba(59,130,246,.5);color:#3b82f6}
+.auth-demo .demo-admin{border-color:rgba(239,68,68,.5);color:#ef4444}
+[data-theme="light"] .auth-demo .demo-member{color:#854d0e;border-color:#ca8a04}
+[data-theme="light"] .auth-demo .demo-learner{color:#065f46;border-color:#059669}
+[data-theme="light"] .auth-demo .demo-partner{color:#1e40af;border-color:#2563eb}
+[data-theme="light"] .auth-demo .demo-admin{color:#991b1b;border-color:#dc2626}
+.auth-switch{font-size:13px;margin-top:18px;text-align:center}
+
+.form-group{margin-bottom:16px}
+label{display:block;font-size:11.5px;font-weight:700;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+input,textarea,select{width:100%;padding:11px 14px;border-radius:var(--btn-r);background:var(--bg3);border:1px solid var(--border);color:var(--tx);font:inherit;font-size:14.5px;transition:.2s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--ac-a);box-shadow:0 0 0 3px var(--zone-tint)}
+textarea{resize:vertical;min-height:110px}
+[data-theme="light"] input,[data-theme="light"] textarea,[data-theme="light"] select{background:#fff;color:#0f172a;border-color:#cbd5e1}
+
+/* ═══════════════════════════════════════════════════════════════
+   19. APP SHELL
+   ═══════════════════════════════════════════════════════════════ */
+.app-shell{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 60px)}
+.app-sidebar{padding:24px 16px;border-right:var(--card-bd);background:color-mix(in srgb,var(--bg2) 75%,transparent);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.app-main{padding:28px 4vw;min-height:calc(100vh - 60px)}
+.app-user{display:flex;gap:12px;align-items:center;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.app-avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:21px;flex:none;background:linear-gradient(135deg,var(--ac-a),var(--ac-b))}
+body[data-zone="membre"] .app-avatar,body[data-zone="admin"] .app-avatar{border-radius:6px}
+.app-username{font-weight:700;font-size:13.5px;line-height:1.2}
+.app-userrole{font-size:10.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+.app-tabs{display:flex;flex-direction:column;gap:4px}
+.app-tabs a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--btn-r);color:var(--mu);font-size:13px;font-weight:500;transition:.2s}
+.app-tabs a:hover{background:var(--zone-tint);color:var(--tx)}
+.app-tabs a.active{background:linear-gradient(135deg,var(--ac-a),var(--ac-b));color:#0a1222;font-weight:700}
+body[data-zone="membre"] .app-tabs a.active,body[data-zone="admin"] .app-tabs a.active{color:#1a0a00}
+.app-logout{display:block;margin-top:22px;padding:10px 14px;border-radius:var(--btn-r);font-size:12.5px;color:var(--mu);text-align:center;border:1px solid var(--border);transition:.2s;cursor:pointer;width:100%}
+.app-logout:hover{color:var(--ac-a);border-color:var(--ac-a)}
+.app-view{display:none;animation:pageIn .4s ease}
+.app-view.active{display:block}
+
+/* ═══════════════════════════════════════════════════════════════
+   20. KPI / PANEL / TABLEAUX / BADGES
+   ═══════════════════════════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.kpi{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:18px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ac-a),var(--ac-b))}
+.kpi-num{font-size:28px;font-weight:800;color:var(--ac-a);font-family:Georgia,serif;line-height:1}
+body[data-zone="admin"] .kpi-num{font-family:'Courier New',monospace}
+.kpi-lbl{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+.panel{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:22px;margin-bottom:20px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.panel-head h3{margin:0;font-size:16px}
+.progress{height:8px;background:var(--bg3);border-radius:99px;overflow:hidden}
+body[data-zone="admin"] .progress,body[data-zone="membre"] .progress{border-radius:2px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--ac-a),var(--ac-b));border-radius:99px;transition:width .8s ease}
+.course-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.course-row:last-child{border-bottom:none}
+.course-row-title{font-weight:600;font-size:14px;margin-bottom:4px}
+.course-row-meta{font-size:12px;color:var(--mu)}
+
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{text-align:left;padding:10px 12px;background:var(--zone-tint);border-bottom:1px solid var(--ac-a);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ac-a)}
+.admin-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.admin-table tr:nth-child(even) td{background:rgba(0,0,0,.12)}
+[data-theme="light"] .admin-table tr:nth-child(even) td{background:#f8fafc}
+.admin-table tr:hover td{background:var(--zone-tint)}
+.admin-table .actions{display:flex;gap:6px;flex-wrap:wrap}
+
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+body[data-zone="admin"] .badge,body[data-zone="membre"] .badge{border-radius:3px}
+.badge.new{background:rgba(34,211,238,.15);color:#22d3ee}
+.badge.in-progress{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.done{background:rgba(16,185,129,.15);color:#10b981}
+.badge.admin{background:rgba(239,68,68,.15);color:#ef4444}
+.badge.membre{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.apprenant{background:rgba(16,185,129,.15);color:#10b981}
+.badge.partenaire{background:rgba(59,130,246,.15);color:#3b82f6}
+.badge.active{background:rgba(16,185,129,.15);color:#10b981}
+.badge.pending{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.rejected{background:rgba(239,68,68,.15);color:#ef4444}
+.badge.purple{background:rgba(168,85,247,.15);color:#a855f7}
+[data-theme="light"] .badge.new{background:#cffafe;color:#0e7490}
+[data-theme="light"] .badge.in-progress{background:#fef3c7;color:#854d0e}
+[data-theme="light"] .badge.done{background:#d1fae5;color:#065f46}
+[data-theme="light"] .badge.admin{background:#fee2e2;color:#991b1b}
+[data-theme="light"] .badge.membre{background:#fef3c7;color:#854d0e}
+[data-theme="light"] .badge.apprenant{background:#d1fae5;color:#065f46}
+[data-theme="light"] .badge.partenaire{background:#dbeafe;color:#1e40af}
+[data-theme="light"] .badge.active{background:#d1fae5;color:#065f46}
+[data-theme="light"] .badge.pending{background:#fef3c7;color:#854d0e}
+[data-theme="light"] .badge.rejected{background:#fee2e2;color:#991b1b}
+[data-theme="light"] .badge.purple{background:#f3e8ff;color:#6b21a8}
+
+/* ═══════════════════════════════════════════════════════════════
+   21. CONTACT
+   ═══════════════════════════════════════════════════════════════ */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:44px;max-width:1000px;margin:auto}
+.contact-item{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start}
+.contact-icon{width:44px;height:44px;border-radius:var(--btn-r);flex:none;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));display:grid;place-items:center;font-size:19px;color:#0a1222;box-shadow:0 4px 14px var(--glow)}
+.contact-item h4{font-size:11.5px;color:var(--mu);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.contact-item a,.contact-item span{font-size:15px;color:var(--tx);font-weight:600}
+form.contact{background:var(--card-bg);border:var(--card-bd);border-radius:var(--card-r);padding:28px}
+.form-msg{padding:12px 14px;border-radius:var(--btn-r);margin-top:14px;font-size:13px;display:none}
+.form-msg.success{background:rgba(16,185,129,.15);border:1px solid var(--c-gr);color:var(--c-gr);display:block}
+.form-msg.error{background:rgba(239,68,68,.15);border:1px solid var(--c-rd);color:var(--c-rd);display:block}
+[data-theme="light"] .form-msg.success{background:#d1fae5;border-color:#059669;color:#065f46}
+[data-theme="light"] .form-msg.error{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+
+/* ═══════════════════════════════════════════════════════════════
+   22. FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:50px;position:relative;overflow:hidden}
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--ac-a),var(--ac-b),var(--ac-c),transparent);opacity:.7}
+.footer-top{max-width:1200px;margin:0 auto;padding:50px 5vw 20px}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:30px}
+.footer-col h4{font-size:12px;color:var(--tx);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;font-weight:700}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:var(--mu);margin-bottom:8px;transition:.2s}
+.footer-col a:hover{color:var(--ac-a);transform:translateX(3px)}
+.footer-brand p{font-size:13px;line-height:1.6;margin-bottom:14px}
+.footer-socials{display:flex;gap:10px}
+.footer-socials a{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:grid;place-items:center;font-size:13px;transition:.2s;margin:0;color:var(--mu)}
+.footer-socials a:hover{background:var(--ac-a);color:#0a1222;border-color:var(--ac-a);transform:translateY(-3px)}
+.partners{max-width:1200px;margin:0 auto;padding:24px 5vw;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.partners-label{font-size:10.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.15em;text-align:center;margin-bottom:14px}
+.partners-list{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.partner{padding:8px 16px;border-radius:99px;background:var(--bg3);border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--mu);transition:.2s}
+.partner:hover{color:var(--ac-a);border-color:var(--ac-a)}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:20px 5vw 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--mu)}
+.footer-legal{display:flex;gap:16px;flex-wrap:wrap}
+.footer-legal a{font-size:12.5px;color:var(--mu)}
+.footer-legal a:hover{color:var(--ac-a)}
+
+/* ═══════════════════════════════════════════════════════════════
+   23. UTILS / TOAST / BACK TO TOP
+   ═══════════════════════════════════════════════════════════════ */
+#back-to-top{position:fixed;bottom:22px;right:22px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));color:#0a1222;font-size:18px;font-weight:800;display:grid;place-items:center;z-index:80;opacity:0;pointer-events:none;transform:translateY(20px);transition:.3s;box-shadow:0 8px 24px var(--glow)}
+#back-to-top.on{opacity:1;pointer-events:auto;transform:none}
+#back-to-top:hover{transform:translateY(-4px)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--ac-a);color:var(--tx);padding:12px 20px;border-radius:var(--btn-r);font-size:13.5px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:200;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{opacity:0;transform:translateY(30px);transition:.7s cubic-bezier(.2,.8,.2,1)}
+.reveal.on{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════════════════════
+   24. MODAL
+   ═══════════════════════════════════════════════════════════════ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal-box{background:var(--bg2);border:var(--card-bd);border-radius:var(--card-r);padding:26px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:modalIn .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h3{margin:0}
+.modal-close{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;font-size:18px;color:var(--mu);transition:.2s}
+.modal-close:hover{background:var(--bg3);color:var(--ac-a)}
+.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+
+/* ═══════════════════════════════════════════════════════════════
+   25. CATEGORY BANNER (sous-pages de catégorie)
+   ═══════════════════════════════════════════════════════════════ */
+.category-banner{padding:40px 5vw 30px;text-align:center;position:relative;overflow:hidden}
+.category-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--zone-tint),transparent);z-index:0}
+.category-banner .container{position:relative;z-index:1}
+.category-banner h1{font-size:clamp(28px,4.5vw,52px)}
+.category-banner p{max-width:700px;margin:0 auto}
+.category-count{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--ac-a);color:#0a1222;font-size:12px;font-weight:700;margin-top:10px}
+
+/* ═══════════════════════════════════════════════════════════════
+   26. RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width:1100px){nav{display:none}#menu-toggle{display:grid}.zone-badge{display:none!important}}
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center;gap:30px;padding-top:30px}
+  .hero-cta{justify-content:center}.hero-visual{order:-1}.hero-emoji{font-size:140px}
+  .contact-wrap{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:26px}
+  .app-shell{grid-template-columns:1fr}
+  .app-sidebar{position:static;height:auto;border-right:none;border-bottom:var(--card-bd);padding:18px}
+  .app-main{padding:18px}
+  .app-tabs{flex-direction:row;overflow-x:auto}
+  .app-tabs a{white-space:nowrap}
+  .detail-body .container{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .footer-grid{grid-template-columns:1fr;text-align:center}
+  .footer-socials,.footer-legal{justify-content:center}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .photo-card.wide{grid-column:span 1;aspect-ratio:1}
+  .photo-card.tall{grid-row:span 1;aspect-ratio:1}
+  .user-menu-btn .info{display:none}
+  .lang-dd-menu{right:-60px}
+}
+@media (max-width:500px){section.block{padding:44px 16px}h1{font-size:30px}h2{font-size:22px}.footer-top{padding:34px 16px 16px}.partners{padding:20px 16px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.hero-photo-bg{animation:none!important}}
+</style>
+</head>
+<body data-zone="public">
+
+<div id="progress"></div>
+<canvas id="bg"></canvas>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <a href="#/accueil" class="logo"><span class="logo-icon">📊</span><span>DataLab<span style="color:var(--ac-a)">.</span></span></a>
+  <nav>
+    <a href="#/accueil" data-route="accueil" data-i18n="nav_accueil">Accueil</a>
+    <a href="#/equipe" data-route="equipe" data-i18n="nav_equipe">Équipe</a>
+    <a href="#/projets" data-route="projets" data-i18n="nav_projets">Projets</a>
+    <a href="#/actualites" data-route="actualites" data-i18n="nav_actualites">Actualités</a>
+    <a href="#/formation" data-route="formation" data-i18n="nav_formation">Formation</a>
+    <a href="#/bibliotheque" data-route="bibliotheque" data-i18n="nav_biblio">Bibliothèque</a>
+    <a href="#/videos" data-route="videos" data-i18n="nav_videos">Vidéos</a>
+    <a href="#/photos" data-route="photos" data-i18n="nav_photos">Photos</a>
+    <a href="#/blog" data-route="blog" data-i18n="nav_blog">Blog</a>
+    <a href="#/contact" data-route="contact" data-i18n="nav_contact">Contact</a>
+  </nav>
+  <div class="header-right">
+    <span class="zone-badge"></span>
+    <div class="lang-dd" id="lang-dd">
+      <button class="lang-dd-btn" onclick="toggleLangDD(event)">
+        <span id="lang-current">🇫🇷 FR</span>
+        <span class="caret">▼</span>
+      </button>
+      <div class="lang-dd-menu">
+        <button data-lang="fr" onclick="setLang('fr')">🇫🇷 Français</button>
+        <button data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
+        <button data-lang="rn" onclick="setLang('rn')">🇧🇮 Kirundi</button>
+      </div>
+    </div>
+    <a href="#/connexion" class="btn-login" id="login-btn"><span>🔑</span> <span data-i18n="header_login">Se connecter</span></a>
+    <div class="user-menu" id="user-menu">
+      <button class="user-menu-btn" onclick="toggleUserMenu(event)">
+        <span class="av" id="um-avatar">👤</span>
+        <div class="info">
+          <div class="nm" id="um-name">Utilisateur</div>
+          <div class="rl" id="um-role">—</div>
+        </div>
+        <span style="font-size:10px;opacity:.6">▼</span>
+      </button>
+      <div class="user-menu-menu">
+        <a href="#" id="um-space-link">📊 Mon espace</a>
+        <a href="#" onclick="openProfile();return false">👤 Mon profil</a>
+        <a href="#" onclick="toast('Paramètres bientôt disponibles');return false">⚙️ Paramètres</a>
+        <div class="divider"></div>
+        <button onclick="logout()" style="color:var(--c-rd)">⎋ Se déconnecter</button>
+      </div>
+    </div>
+    <button class="icon-btn" id="btn-theme" title="Thème" onclick="toggleTheme()">🌙</button>
+    <button class="icon-btn" id="menu-toggle" title="Menu" onclick="toggleMenu()">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#/accueil">Accueil</a><a href="#/equipe">Équipe</a><a href="#/projets">Projets</a>
+  <a href="#/actualites">Actualités</a><a href="#/formation">Formation</a>
+  <a href="#/bibliotheque">Bibliothèque</a><a href="#/videos">Vidéos</a>
+  <a href="#/photos">Photos</a><a href="#/blog">Blog</a><a href="#/contact">Contact</a>
+  <a href="#/connexion" style="color:var(--ac-a)">🔑 Se connecter</a>
+</div>
+
+<main id="app">
+
+<!-- ═════════════════ ACCUEIL ═════════════════ -->
+<section class="page" data-page="accueil">
+  <div class="hero">
+    <div class="hero-photo-bg"></div>
+    <div class="hero-bg-overlay"></div>
+    <div>
+      <span class="tag" data-i18n="hero_tag">🇧🇮 DataLab Burundi</span>
+      <h1><span data-i18n="hero_line1">Le collectif des</span><br><span class="grad" data-i18n="hero_line2">statisticiens</span><br><span data-i18n="hero_line3">du Burundi.</span></h1>
+      <p data-i18n="hero_desc">Nous transformons les données en décisions. Un collectif de jeunes diplômés en Statistique Appliquée, unis pour valoriser la donnée au service du développement.</p>
+      <div class="hero-cta">
+        <a href="#/projets" class="btn btn-primary" data-i18n="hero_cta1">🚀 Voir nos projets</a>
+        <a href="#/formation" class="btn btn-ghost" data-i18n="hero_cta2">🎓 Se former</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num" data-count="15">0</div><div class="stat-lbl" data-i18n="stat_members">Membres actifs</div></div>
+        <div class="stat"><div class="stat-num" data-count="24">0</div><div class="stat-lbl" data-i18n="stat_projects">Projets livrés</div></div>
+        <div class="stat"><div class="stat-num" data-count="8">0</div><div class="stat-lbl" data-i18n="stat_partners">Partenaires</div></div>
+        <div class="stat"><div class="stat-num" data-count="3">0</div><div class="stat-lbl" data-i18n="stat_awards">Prix reçus</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-orb"></div>
+      <div class="hero-emoji">📊</div>
+    </div>
+  </div>
+
+  <div class="mvv-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="tag" data-i18n="mvv_tag">Notre raison d'être</span>
+        <h2 data-i18n="mvv_title">Mission, vision &amp; valeurs</h2>
+        <p data-i18n="mvv_sub">Ce qui nous anime au quotidien et guide chacune de nos actions.</p>
+      </div>
+      <div class="mvv-grid">
+        <div class="mvv-card card-primary reveal">
+          <div class="mvv-icon">🎯</div>
+          <h3 data-i18n="mvv_mission">Notre mission</h3>
+          <p data-i18n="mvv_mission_txt">Transformer les données en décisions utiles pour les organisations locales, partager le savoir par des articles, ressources et formations, et révéler les talents de la jeunesse burundaise.</p>
+        </div>
+        <div class="mvv-card card-purple reveal" style="transition-delay:.1s">
+          <div class="mvv-icon">🔭</div>
+          <h3 data-i18n="mvv_vision">Notre vision</h3>
+          <p data-i18n="mvv_vision_txt">Faire de DataLab la référence de l'analyse de données et de l'excellence statistique au Burundi et en Afrique de l'Est, pour un développement durable et inclusif.</p>
+        </div>
+        <div class="mvv-card card-amber reveal" style="transition-delay:.2s">
+          <div class="mvv-icon">💎</div>
+          <h3 data-i18n="mvv_values">Nos valeurs</h3>
+          <p data-i18n="mvv_values_txt">Six principes qui orientent notre travail collectif :</p>
+          <div class="values-list">
+            <span class="value-pill">🔬 Rigueur scientifique</span>
+            <span class="value-pill">🔍 Transparence méthodologique</span>
+            <span class="value-pill">🤝 Partage &amp; entraide</span>
+            <span class="value-pill">⚖️ Éthique des données</span>
+            <span class="value-pill">🌍 Ancrage local &amp; ouverture</span>
+            <span class="value-pill">💡 Innovation accessible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ ÉQUIPE ═════════════════ -->
+<section class="page" data-page="equipe">
+  <div class="block"><div class="container">
+    <div class="section-head reveal">
+      <span class="tag" data-i18n="team_tag">Notre équipe</span>
+      <h2 data-i18n="team_title">Les visages de DataLab</h2>
+      <p data-i18n="team_sub">Une équipe pluridisciplinaire animée par la même passion : la donnée au service de l'impact.</p>
+    </div>
+    <div class="team-grid" id="team-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="membre-detail" id="page-membre-detail"></section>
+
+<!-- ═════════════════ PROJETS (liste) ═════════════════ -->
+<section class="page" data-page="projets">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag" data-i18n="proj_tag">Portfolio</span>
+      <h1 id="projets-title" data-i18n="proj_title">Nos projets récents</h1>
+      <p id="projets-sub" data-i18n="proj_sub">Des solutions data concrètes, mesurables et adaptées au contexte burundais et est-africain.</p>
+      <span class="category-count" id="projets-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="filters reveal" id="projets-filters"></div>
+    <div class="projects-grid" id="projects-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="projet-detail" id="page-projet-detail"></section>
+
+<!-- ═════════════════ ACTUALITÉS ═════════════════ -->
+<section class="page" data-page="actualites">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag" data-i18n="news_tag">📰 Actualités</span>
+      <h1 id="actualites-title" data-i18n="news_title">La vie du collectif</h1>
+      <p id="actualites-sub" data-i18n="news_sub">Les dernières nouvelles de DataLab et de l'écosystème data au Burundi.</p>
+      <span class="category-count" id="actualites-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="reveal" style="margin-bottom:44px">
+      <h3 style="margin-bottom:8px">📅 Événements à venir</h3>
+      <p style="margin-bottom:20px">Participez à nos ateliers, conférences et rencontres.</p>
+      <div class="news-grid" id="events-grid"></div>
+    </div>
+    <div class="filters reveal" id="actualites-filters"></div>
+    <div class="news-grid" id="news-list"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="news-detail" id="page-news-detail"></section>
+
+<!-- ═════════════════ FORMATION ═════════════════ -->
+<section class="page" data-page="formation">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag" data-i18n="course_tag">🎓 Formation</span>
+      <h1 id="formation-title" data-i18n="course_title">Notre catalogue de formations</h1>
+      <p id="formation-sub" data-i18n="course_sub">Des parcours pratiques pour maîtriser la data : R, Python, Power BI, échantillonnage, cartographie.</p>
+      <span class="category-count" id="formation-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="filters reveal" id="formation-filters"></div>
+    <div class="courses-grid" id="courses-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="course-detail" id="page-course-detail"></section>
+
+<!-- ═════════════════ BIBLIOTHÈQUE ═════════════════ -->
+<section class="page" data-page="bibliotheque">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag">📚 Bibliothèque</span>
+      <h1 id="biblio-title">Bibliothèque de ressources</h1>
+      <p id="biblio-sub">Datasets, cours, outils et liens utiles pour la data au Burundi.</p>
+      <span class="category-count" id="biblio-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="filters reveal" id="biblio-filters"></div>
+    <div class="projects-grid" id="ressources-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="ressource-detail" id="page-ressource-detail"></section>
+
+<!-- ═════════════════ VIDÉOS ═════════════════ -->
+<section class="page" data-page="videos">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag" data-i18n="video_tag">🎬 Vidéos</span>
+      <h1 id="videos-title" data-i18n="video_title">Notre chaîne vidéo</h1>
+      <p id="videos-sub" data-i18n="video_sub">Tutoriels, conférences, interviews et ateliers.</p>
+      <span class="category-count" id="videos-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="filters reveal" id="videos-filters"></div>
+    <div class="videos-grid" id="videos-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="video-detail" id="page-video-detail"></section>
+
+<!-- ═════════════════ PHOTOS ═════════════════ -->
+<section class="page" data-page="photos">
+  <div class="category-banner">
+    <div class="container">
+      <span class="tag" data-i18n="photo_tag">📸 Galerie</span>
+      <h1 id="photos-title" data-i18n="photo_title">Nos moments en images</h1>
+      <p id="photos-sub" data-i18n="photo_sub">Événements, équipe, terrain, projets.</p>
+      <span class="category-count" id="photos-count"></span>
+    </div>
+  </div>
+  <div class="block"><div class="container">
+    <div class="filters reveal" id="photos-filters"></div>
+    <div class="photos-grid" id="photos-grid"></div>
+  </div></div>
+</section>
+
+<!-- ═════════════════ BLOG ═════════════════ -->
+<section class="page" data-page="blog">
+  <div class="block"><div class="container">
+    <div class="section-head reveal">
+      <span class="tag" data-i18n="blog_tag">Publications</span>
+      <h2 data-i18n="blog_title">Nos derniers articles</h2>
+      <p data-i18n="blog_sub">Analyses, tutoriels et réflexions sur la data au Burundi.</p>
+    </div>
+    <div class="news-grid" id="blog-grid"></div>
+  </div></div>
+</section>
+
+<section class="page" data-page="blog-detail" id="page-blog-detail"></section>
+
+<!-- ═════════════════ CONTACT ═════════════════ -->
+<section class="page" data-page="contact">
+  <div class="block"><div class="container">
+    <div class="contact-wrap">
+      <div class="contact-info reveal">
+        <span class="tag">Contact</span>
+        <h2>Travaillons ensemble</h2>
+        <p>Un projet, une mission, une collaboration ? Écrivez-nous.</p>
+        <div class="contact-item"><div class="contact-icon">📍</div><div><h4>Localisation</h4><span>Bujumbura, Burundi</span></div></div>
+        <div class="contact-item"><div class="contact-icon">✉️</div><div><h4>Email</h4><a href="mailto:contact@datalab.bi">contact@datalab.bi</a></div></div>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><h4>Téléphone</h4><a href="tel:+25700000000">+257 XX XX XX XX</a></div></div>
+        <div class="contact-item"><div class="contact-icon">💬</div><div><h4>WhatsApp</h4><a href="https://wa.me/25700000000" target="_blank" rel="noopener">Discuter</a></div></div>
+      </div>
+      <form id="contact-form" class="contact reveal" onsubmit="submitContact(event)">
+        <div class="form-group"><label>Nom complet *</label><input type="text" id="ct-name" required></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="ct-email" required></div>
+        <div class="form-group"><label>Sujet *</label>
+          <select id="ct-subject" required>
+            <option value="">— Choisir —</option>
+            <option>Demande de devis</option><option>Collaboration</option>
+            <option>Rejoindre DataLab</option><option>Formation</option>
+            <option>Partenariat</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message *</label><textarea id="ct-message" required></textarea></div>
+        <button type="submit" class="btn btn-primary" style="width:100%">📩 Envoyer</button>
+        <div class="form-msg" id="contact-msg"></div>
+      </form>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═════════════════ CONNEXION ═════════════════ -->
+<section class="page" data-page="connexion">
+  <div class="auth-wrap"><div class="auth-card reveal">
+    <span class="tag" style="display:block;text-align:center;margin-left:auto;margin-right:auto;width:fit-content">Connexion</span>
+    <h2>Bon retour 👋</h2>
+    <p class="auth-sub">Connectez-vous pour accéder à votre espace personnel.</p>
+    <div class="auth-form-msg" id="login-msg"></div>
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group"><label>Email *</label><input type="email" id="login-email" required autocomplete="email"></div>
+      <div class="form-group"><label>Mot de passe *</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Se connecter</button>
+    </form>
+    <div class="auth-demo">
+      <div class="demo-title">Comptes de démonstration :</div>
+      <button class="demo-member" onclick="fillLogin('prosper@datalab.bi','demo1234')">👥 Membre</button>
+      <button class="demo-learner" onclick="fillLogin('aline@datalab.bi','demo1234')">🎓 Apprenant</button>
+      <button class="demo-partner" onclick="fillLogin('unicef@partner.bi','demo1234')">🤝 Partenaire</button>
+      <button class="demo-admin" onclick="fillLogin('admin@datalab.bi','admin1234')">🛡️ Admin</button>
+    </div>
+    <p class="auth-switch">Pas encore de compte ? <a href="#/inscription">Créer un compte</a></p>
+  </div></div>
+</section>
+
+<!-- ═════════════════ INSCRIPTION ═════════════════ -->
+<section class="page" data-page="inscription">
+  <div class="auth-wrap"><div class="auth-card reveal">
+    <span class="tag" style="display:block;text-align:center;margin-left:auto;margin-right:auto;width:fit-content">Inscription</span>
+    <h2>Rejoindre DataLab</h2>
+    <p class="auth-sub">Créez votre compte pour accéder à votre espace.</p>
+    <div class="auth-form-msg" id="register-msg"></div>
+    <form onsubmit="handleRegister(event)">
+      <div class="form-group"><label>Nom complet *</label><input type="text" id="reg-name" required></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="reg-email" required autocomplete="email"></div>
+      <div class="form-group"><label>Mot de passe *</label><input type="password" id="reg-password" required minlength="6" autocomplete="new-password"></div>
+      <div class="form-group"><label>Confirmer *</label><input type="password" id="reg-password2" required minlength="6"></div>
+      <div class="form-group"><label>Je m'inscris comme</label>
+        <select id="reg-role">
+          <option value="apprenant">🎓 Apprenant</option>
+          <option value="membre">👥 Membre de l'équipe</option>
+          <option value="partenaire">🤝 Partenaire</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:12px;font-weight:500;color:var(--mu)">
+          <input type="checkbox" id="reg-cgu" required style="width:auto;accent-color:var(--ac-a)">
+          <span>J'accepte les conditions d'utilisation et la politique de confidentialité.</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Créer mon compte</button>
+    </form>
+    <p class="auth-switch">Déjà inscrit·e ? <a href="#/connexion">Se connecter</a></p>
+  </div></div>
+</section>
+
+<!-- ═════════════════ ESPACE MEMBRE ═════════════════ -->
+<section class="page" data-page="membre">
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="app-user">
+        <div class="app-avatar" id="membre-avatar">👥</div>
+        <div><div class="app-username" id="membre-name">Membre</div><div class="app-userrole">Membre de l'équipe</div></div>
+      </div>
+      <nav class="app-tabs" id="membre-tabs">
+        <a href="#/membre" data-tab="overview">📊 Vue d'ensemble</a>
+        <a href="#/membre/projets" data-tab="projets">📁 Mes projets</a>
+        <a href="#/membre/articles" data-tab="articles">📝 Mes articles</a>
+        <a href="#/membre/ressources" data-tab="ressources">📚 Mes ressources</a>
+        <a href="#/membre/profil" data-tab="profil">👤 Mon profil</a>
+      </nav>
+      <button class="app-logout" onclick="logout()">⎋ Se déconnecter</button>
+    </aside>
+    <div class="app-main">
+      <div class="app-view" data-view="overview">
+        <span class="tag">👥 Espace membre</span>
+        <h2 id="membre-welcome">Bienvenue</h2>
+        <p>Votre espace personnel de membre de l'équipe DataLab.</p>
+        <div class="kpi-grid" id="membre-kpis"></div>
+        <div class="panel"><div class="panel-head"><h3>🕒 Activité récente</h3></div><div id="membre-activity"></div></div>
+      </div>
+      <div class="app-view" data-view="projets">
+        <span class="tag">📁 Mes projets</span>
+        <h2>Mes projets</h2>
+        <div class="panel"><div class="panel-head"><h3>📁 Liste</h3><button class="btn btn-primary btn-sm" onclick="openModal('project')">+ Nouveau projet</button></div><div id="membre-projects-list"></div></div>
+      </div>
+      <div class="app-view" data-view="articles">
+        <span class="tag">📝 Mes articles</span>
+        <h2>Mes articles</h2>
+        <div class="panel"><div class="panel-head"><h3>📝 Liste</h3><button class="btn btn-primary btn-sm" onclick="openModal('article')">+ Nouvel article</button></div><div id="membre-articles-list"></div></div>
+      </div>
+      <div class="app-view" data-view="ressources">
+        <span class="tag">📚 Mes ressources</span>
+        <h2>Mes ressources</h2>
+        <div class="panel"><div class="panel-head"><h3>📚 Liste</h3><button class="btn btn-primary btn-sm" onclick="openModal('resource')">+ Nouvelle ressource</button></div><div id="membre-resources-list"></div></div>
+      </div>
+      <div class="app-view" data-view="profil">
+        <span class="tag">👤 Mon profil</span>
+        <h2>Mon profil</h2>
+        <div class="panel">
+          <div class="form-group"><label>Nom complet</label><input id="membre-profil-name"></div>
+          <div class="form-group"><label>Bio</label><textarea id="membre-profil-bio"></textarea></div>
+          <div class="form-group"><label>Spécialité</label><input id="membre-profil-spec"></div>
+          <button class="btn btn-primary" onclick="saveProfile('membre')">💾 Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ ESPACE APPRENANT ═════════════════ -->
+<section class="page" data-page="apprenant">
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="app-user">
+        <div class="app-avatar" id="apprenant-avatar">🎓</div>
+        <div><div class="app-username" id="apprenant-name">Apprenant</div><div class="app-userrole">Apprenant</div></div>
+      </div>
+      <nav class="app-tabs" id="apprenant-tabs">
+        <a href="#/apprenant" data-tab="overview">📊 Vue d'ensemble</a>
+        <a href="#/apprenant/formations" data-tab="formations">🎓 Mes formations</a>
+        <a href="#/apprenant/projets" data-tab="projets">📁 Mes projets</a>
+        <a href="#/apprenant/profil" data-tab="profil">👤 Mon profil & RGPD</a>
+      </nav>
+      <button class="app-logout" onclick="logout()">⎋ Se déconnecter</button>
+    </aside>
+    <div class="app-main">
+      <div class="app-view" data-view="overview">
+        <span class="tag">🔒 Espace privé · Apprenant</span>
+        <h2 id="apprenant-welcome">Bonjour</h2>
+        <p>Vos données personnelles. <strong style="color:var(--ac-a)">Vous seul·e (et l'admin) pouvez les voir.</strong></p>
+        <div class="kpi-grid" id="apprenant-kpis"></div>
+        <div class="panel"><div class="panel-head"><h3>📚 Continuer</h3><a href="#/apprenant/formations" class="btn btn-ghost btn-sm">Tout voir</a></div><div id="apprenant-preview"></div></div>
+      </div>
+      <div class="app-view" data-view="formations">
+        <span class="tag">🔒 Mes formations</span>
+        <h2>Mon parcours</h2>
+        <div id="apprenant-courses-full"></div>
+      </div>
+      <div class="app-view" data-view="projets">
+        <span class="tag">🔒 Mes projets</span>
+        <h2>Mes contributions</h2>
+        <div class="panel"><div class="panel-head"><h3>📁 Liste</h3><button class="btn btn-primary btn-sm" onclick="openModal('project')">+ Nouveau</button></div><div id="apprenant-projects-list"></div></div>
+      </div>
+      <div class="app-view" data-view="profil">
+        <span class="tag">🔒 Mon profil</span>
+        <h2>Mes informations</h2>
+        <div class="panel">
+          <div class="form-group"><label>Nom complet</label><input id="apprenant-profil-name"></div>
+          <div class="form-group"><label>Email</label><input id="apprenant-profil-email" disabled></div>
+          <div class="form-group"><label>Bio</label><textarea id="apprenant-profil-bio"></textarea></div>
+          <button class="btn btn-primary" onclick="saveProfile('apprenant')">💾 Enregistrer</button>
+        </div>
+        <div class="panel">
+          <h3>🔒 Droits RGPD</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="exportMyData()">📥 Exporter</button>
+            <button class="btn btn-ghost btn-sm" style="border-color:rgba(239,68,68,.5);color:#ef4444" onclick="toast('Demande enregistrée (48h)')">🗑️ Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ ESPACE PARTENAIRE ═════════════════ -->
+<section class="page" data-page="partenaire">
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="app-user">
+        <div class="app-avatar" id="partenaire-avatar">🤝</div>
+        <div><div class="app-username" id="partenaire-name">Partenaire</div><div class="app-userrole">Partenaire</div></div>
+      </div>
+      <nav class="app-tabs" id="partenaire-tabs">
+        <a href="#/partenaire" data-tab="overview">📊 Vue d'ensemble</a>
+        <a href="#/partenaire/demandes" data-tab="demandes">📩 Mes demandes</a>
+        <a href="#/partenaire/opportunites" data-tab="opportunites">💼 Opportunités</a>
+        <a href="#/partenaire/profil" data-tab="profil">👤 Mon profil</a>
+      </nav>
+      <button class="app-logout" onclick="logout()">⎋ Se déconnecter</button>
+    </aside>
+    <div class="app-main">
+      <div class="app-view" data-view="overview">
+        <span class="tag">🤝 Espace partenaire</span>
+        <h2 id="partenaire-welcome">Bienvenue</h2>
+        <p>Suivez vos collaborations et demandes avec DataLab.</p>
+        <div class="kpi-grid" id="partenaire-kpis"></div>
+        <div class="panel"><div class="panel-head"><h3>🤝 Nos collaborations</h3></div><div id="partenaire-collabs"></div></div>
+      </div>
+      <div class="app-view" data-view="demandes">
+        <span class="tag">📩 Mes demandes</span>
+        <h2>Mes demandes</h2>
+        <div class="panel"><div class="panel-head"><h3>📩 Liste</h3><button class="btn btn-primary btn-sm" onclick="toast('Nouvelle demande')">+ Nouvelle demande</button></div><div id="partenaire-demandes-list"></div></div>
+      </div>
+      <div class="app-view" data-view="opportunites">
+        <span class="tag">💼 Opportunités</span>
+        <h2>Opportunités de collaboration</h2>
+        <div class="news-grid" id="partenaire-opportunites"></div>
+      </div>
+      <div class="app-view" data-view="profil">
+        <span class="tag">👤 Mon profil</span>
+        <h2>Profil partenaire</h2>
+        <div class="panel">
+          <div class="form-group"><label>Organisation</label><input id="partenaire-profil-org"></div>
+          <div class="form-group"><label>Contact</label><input id="partenaire-profil-contact"></div>
+          <div class="form-group"><label>Secteur</label><input id="partenaire-profil-secteur"></div>
+          <button class="btn btn-primary" onclick="saveProfile('partenaire')">💾 Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ ESPACE ADMIN ═════════════════ -->
+<section class="page" data-page="admin">
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="app-user">
+        <div class="app-avatar" id="admin-avatar">🛡️</div>
+        <div><div class="app-username" id="admin-name">Admin</div><div class="app-userrole">Administrateur</div></div>
+      </div>
+      <nav class="app-tabs" id="admin-tabs">
+        <a href="#/admin" data-tab="overview">📊 Vue d'ensemble</a>
+        <a href="#/admin/utilisateurs" data-tab="utilisateurs">👥 Utilisateurs</a>
+        <a href="#/admin/messages" data-tab="messages">✉️ Messages</a>
+        <a href="#/admin/moderation" data-tab="moderation">🧹 Modération</a>
+        <a href="#/admin/progressions" data-tab="progressions">📈 Progressions</a>
+        <a href="#/admin/newsletter" data-tab="newsletter">📬 Newsletter</a>
+      </nav>
+      <button class="app-logout" onclick="logout()">⎋ Se déconnecter</button>
+    </aside>
+    <div class="app-main">
+      <div class="app-view" data-view="overview">
+        <span class="tag">🛡️ Dashboard admin</span>
+        <h2>Vue d'ensemble</h2>
+        <div class="kpi-grid" id="admin-kpis"></div>
+        <div class="panel"><div class="panel-head"><h3>🕒 Activité récente</h3></div><div id="admin-activity"></div></div>
+      </div>
+      <div class="app-view" data-view="utilisateurs">
+        <span class="tag">👥 Gestion</span>
+        <h2>Utilisateurs</h2>
+        <div class="panel">
+          <div class="panel-head"><h3>👥 Liste complète</h3><button class="btn btn-primary btn-sm" onclick="openModal('user')">+ Ajouter</button></div>
+          <table class="admin-table"><thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="admin-users-body"></tbody></table>
+        </div>
+      </div>
+      <div class="app-view" data-view="messages">
+        <span class="tag">✉️ Boîte</span>
+        <h2>Messages de contact</h2>
+        <div class="panel"><table class="admin-table"><thead><tr><th>Nom</th><th>Sujet</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead><tbody id="admin-messages-body"></tbody></table></div>
+      </div>
+      <div class="app-view" data-view="moderation">
+        <span class="tag">🧹 Modération</span>
+        <h2>Contenus à modérer</h2>
+        <div class="panel"><table class="admin-table"><thead><tr><th>Type</th><th>Titre</th><th>Auteur</th><th>Actions</th></tr></thead><tbody id="admin-moderation-body"></tbody></table></div>
+      </div>
+      <div class="app-view" data-view="progressions">
+        <span class="tag">📈 Progressions</span>
+        <h2>Progressions des apprenants</h2>
+        <p><strong style="color:var(--ac-a)">Accès admin uniquement.</strong> Chaque apprenant ne voit que ses propres données.</p>
+        <div id="admin-progressions"></div>
+      </div>
+      <div class="app-view" data-view="newsletter">
+        <span class="tag">📬 Communication</span>
+        <h2>Newsletter</h2>
+        <div class="panel">
+          <div class="form-group"><label>Sujet</label><input placeholder="Titre"></div>
+          <div class="form-group"><label>Contenu</label><textarea placeholder="# Bonjour…"></textarea></div>
+          <div class="form-group"><label>Langue</label><select><option>Toutes</option><option>FR</option><option>EN</option><option>RN</option></select></div>
+          <button class="btn btn-primary" onclick="toast('Newsletter programmée ✅')">📤 Envoyer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════ 404 ═════════════════ -->
+<section class="page" data-page="404">
+  <div style="text-align:center;padding:120px 20px;max-width:600px;margin:auto">
+    <div style="font-size:120px;font-weight:800;line-height:1;background:linear-gradient(135deg,var(--ac-a),var(--ac-b));-webkit-background-clip:text;background-clip:text;color:transparent">404</div>
+    <h2 style="text-align:center;padding:0;border:none;margin-top:20px">Page introuvable</h2>
+    <p>Oups, cette page n'existe pas.</p>
+    <a href="#/accueil" class="btn btn-primary" style="margin-top:20px">← Accueil</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-grid">
+      <div class="footer-col footer-brand">
+        <div class="logo" style="margin-bottom:14px"><span class="logo-icon">📊</span><span>DataLab<span style="color:var(--ac-a)">.</span></span></div>
+        <p>Le collectif de jeunes statisticiens du Burundi. Transformer les données en impact.</p>
+        <div class="footer-socials">
+          <a href="#" onclick="toast('LinkedIn bientôt');return false">in</a>
+          <a href="#" onclick="toast('GitHub bientôt');return false">⌨</a>
+          <a href="https://wa.me/25700000000" target="_blank">💬</a>
+          <a href="mailto:contact@datalab.bi">✉</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <a href="#/accueil">Accueil</a><a href="#/equipe">Équipe</a><a href="#/projets">Projets</a>
+        <a href="#/actualites">Actualités</a><a href="#/formation">Formation</a>
+        <a href="#/bibliotheque">Bibliothèque</a><a href="#/blog">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Espaces</h4>
+        <a href="#/connexion">Connexion</a><a href="#/inscription">Inscription</a>
+        <a href="#/membre">Membre équipe</a><a href="#/apprenant">Apprenant</a>
+        <a href="#/partenaire">Partenaire</a><a href="#/admin">Administrateur</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>📍 Bujumbura, Burundi</p>
+        <a href="mailto:contact@datalab.bi">contact@datalab.bi</a>
+        <a href="tel:+25700000000">+257 XX XX XX XX</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 <strong>DataLab Burundi</strong> · Tous droits réservés</div>
+    <div class="footer-legal">
+      <a href="#" onclick="toast('Bientôt');return false">Mentions</a>
+      <a href="#" onclick="toast('Bientôt');return false">Confidentialité</a>
+      <a href="#" onclick="toast('Bientôt');return false">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" onclick="scrollTop()">↑</button>
+<div id="toast"></div>
+
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="modal-title">Modifier</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveModal()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   1. i18n (FR / EN / RN)
+   ═══════════════════════════════════════════════════════════════ */
+const I18N = {
+  fr:{nav_accueil:'Accueil',nav_equipe:'Équipe',nav_projets:'Projets',nav_actualites:'Actualités',nav_formation:'Formation',nav_biblio:'Bibliothèque',nav_videos:'Vidéos',nav_photos:'Photos',nav_blog:'Blog',nav_contact:'Contact',header_login:'Se connecter',hero_tag:'🇧🇮 DataLab Burundi',hero_line1:'Le collectif des',hero_line2:'statisticiens',hero_line3:'du Burundi.',hero_desc:'Nous transformons les données en décisions. Un collectif de jeunes diplômés en Statistique Appliquée.',hero_cta1:'🚀 Voir nos projets',hero_cta2:'🎓 Se former',stat_members:'Membres actifs',stat_projects:'Projets livrés',stat_partners:'Partenaires',stat_awards:'Prix reçus',mvv_tag:"Notre raison d'être",mvv_title:'Mission, vision & valeurs',mvv_sub:'Ce qui nous anime au quotidien.',mvv_mission:'Notre mission',mvv_vision:'Notre vision',mvv_values:'Nos valeurs',team_tag:'Notre équipe',team_title:'Les visages de DataLab',team_sub:'Une équipe passionnée.',proj_tag:'Portfolio',proj_title:'Nos projets récents',proj_sub:'Des solutions data concrètes.',news_tag:'📰 Actualités',news_title:'La vie du collectif',news_sub:'Les dernières nouvelles.',course_tag:'🎓 Formation',course_title:'Notre catalogue',course_sub:'Des parcours pratiques.',video_tag:'🎬 Vidéos',video_title:'Notre chaîne',video_sub:'Tutoriels, conférences.',photo_tag:'📸 Galerie',photo_title:'En images',photo_sub:'Événements, équipe.',blog_tag:'Publications',blog_title:'Nos articles',blog_sub:'Analyses et tutoriels.'},
+  en:{nav_accueil:'Home',nav_equipe:'Team',nav_projets:'Projects',nav_actualites:'News',nav_formation:'Training',nav_biblio:'Library',nav_videos:'Videos',nav_photos:'Photos',nav_blog:'Blog',nav_contact:'Contact',header_login:'Log in',hero_tag:'🇧🇮 DataLab Burundi',hero_line1:'The collective of',hero_line2:'statisticians',hero_line3:'from Burundi.',hero_desc:'We turn data into decisions.',hero_cta1:'🚀 See projects',hero_cta2:'🎓 Get trained',stat_members:'Members',stat_projects:'Projects',stat_partners:'Partners',stat_awards:'Awards',mvv_tag:'Our purpose',mvv_title:'Mission, vision & values',mvv_sub:'What drives us.',mvv_mission:'Mission',mvv_vision:'Vision',mvv_values:'Values',team_tag:'Team',team_title:'The faces of DataLab',team_sub:'A passionate team.',proj_tag:'Portfolio',proj_title:'Recent projects',proj_sub:'Concrete data solutions.',news_tag:'📰 News',news_title:'Life of the collective',news_sub:'Latest news.',course_tag:'🎓 Training',course_title:'Catalog',course_sub:'Practical tracks.',video_tag:'🎬 Videos',video_title:'Our channel',video_sub:'Tutorials, conferences.',photo_tag:'📸 Gallery',photo_title:'In pictures',photo_sub:'Events, team.',blog_tag:'Publications',blog_title:'Our articles',blog_sub:'Analyses and tutorials.'},
+  rn:{nav_accueil:'Ahabanza',nav_equipe:'Itsinda',nav_projets:'Imigambi',nav_actualites:'Amakuru',nav_formation:'Amahugurwa',nav_biblio:'Isomero',nav_videos:'Videwo',nav_photos:'Amafoto',nav_blog:'Inyandiko',nav_contact:'Twandikire',header_login:'Injira',hero_tag:'🇧🇮 DataLab Burundi',hero_line1:'Itsinda ry\'',hero_line2:'abahinga mu mibare',hero_line3:'bo mu Burundi.',hero_desc:'Duhindura amakuru mu ngingo zifatika.',hero_cta1:'🚀 Reba imigambi',hero_cta2:'🎓 HIGA',stat_members:'Abanyamuryango',stat_projects:'Imigambi',stat_partners:'Abafatanyabikorwa',stat_awards:'Ibihembo',mvv_tag:'Intumbero',mvv_title:'Ubutumwa, iyerekwa & indangagaciro',mvv_sub:'Ibituranga.',mvv_mission:'Ubutumwa',mvv_vision:'Iyerekwa',mvv_values:'Indangagaciro',team_tag:'Itsinda',team_title:'Abanyamuryango',team_sub:'Itsinda ryuzuye ishyaka.',proj_tag:'Imigambi',proj_title:'Imigambi ya vuba',proj_sub:'Ibisubizo bifatika.',news_tag:'📰 Amakuru',news_title:'Ubuzima bw\'itsinda',news_sub:'Amakuru mashya.',course_tag:'🎓 Amahugurwa',course_title:'Urutonde',course_sub:'Inzira zifatika.',video_tag:'🎬 Videwo',video_title:'Umuyoboro',video_sub:'Amahugurwa.',photo_tag:'📸 Amafoto',photo_title:'Mu mafoto',photo_sub:'Ibikorwa, itsinda.',blog_tag:'Inyandiko',blog_title:'Inyandiko zacu',blog_sub:'Isesengura.'}
+};
+function applyI18n(){
+  const lang = localStorage.getItem('datalab_lang') || 'fr';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[lang]&&I18N[lang][k])el.textContent=I18N[lang][k]});
+  document.getElementById('lang-current').textContent = {fr:'🇫🇷 FR',en:'🇬🇧 EN',rn:'🇧🇮 RN'}[lang];
+  document.querySelectorAll('.lang-dd-menu button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+}
+function setLang(lang){localStorage.setItem('datalab_lang',lang);document.getElementById('lang-dd').classList.remove('open');applyI18n();toast('🌍 '+(lang==='fr'?'Français':lang==='en'?'English':'Kirundi'))}
+function toggleLangDD(e){e.stopPropagation();document.getElementById('lang-dd').classList.toggle('open');document.getElementById('user-menu').classList.remove('open')}
+document.addEventListener('click',()=>{document.getElementById('lang-dd').classList.remove('open');document.getElementById('user-menu').classList.remove('open')});
+
+/* ═══════════════════════════════════════════════════════════════
+   2. CATÉGORIES (pour les sous-pages)
+   ═══════════════════════════════════════════════════════════════ */
+const CATEGORIES = {
+  projets: [
+    {key:'statistique',label:'Statistique',emoji:'📊'},
+    {key:'viz',label:'Data Viz',emoji:'📈'},
+    {key:'machine-learning',label:'Machine Learning',emoji:'🤖'},
+    {key:'enquete',label:'Enquête',emoji:'📋'}
+  ],
+  formation: [
+    {key:'r',label:'R',emoji:'📘'},
+    {key:'powerbi',label:'Power BI',emoji:'📊'},
+    {key:'python',label:'Python',emoji:'🐍'},
+    {key:'echantillonnage',label:'Échantillonnage',emoji:'🎯'},
+    {key:'cartographie',label:'Cartographie',emoji:'🗺️'},
+    {key:'excel',label:'Excel',emoji:'📑'},
+    {key:'visualisation',label:'Visualisation',emoji:'📈'}
+  ],
+  actualites: [
+    {key:'collectif',label:'Collectif',emoji:'👥'},
+    {key:'data',label:'Data',emoji:'📊'},
+    {key:'formation',label:'Formation',emoji:'🎓'},
+    {key:'evenement',label:'Événement',emoji:'🎉'},
+    {key:'prix',label:'Prix',emoji:'🏆'},
+    {key:'partenariat',label:'Partenariat',emoji:'🤝'},
+    {key:'communaute',label:'Communauté',emoji:'💬'}
+  ],
+  videos: [
+    {key:'tutoriel',label:'Tutoriel',emoji:'📚'},
+    {key:'conference',label:'Conférence',emoji:'🎤'},
+    {key:'interview',label:'Interview',emoji:'💡'},
+    {key:'atelier',label:'Atelier',emoji:'🛠️'}
+  ],
+  photos: [
+    {key:'equipe',label:'Équipe',emoji:'👥'},
+    {key:'evenement',label:'Événement',emoji:'🎉'},
+    {key:'projet',label:'Projet',emoji:'📁'},
+    {key:'terrain',label:'Terrain',emoji:'🌾'}
+  ],
+  bibliotheque: [
+    {key:'dataset',label:'Datasets',emoji:'🗃️'},
+    {key:'cours',label:'Cours',emoji:'📚'},
+    {key:'outil',label:'Outils',emoji:'🔧'}
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   3. DONNÉES (contenu riche)
+   ═══════════════════════════════════════════════════════════════ */
+const TEAM = [
+  {slug:'prosper',name:'Prosper Nindagiye',role:'Coordinateur',emoji:'👨‍💼',bio:'Spécialiste data & IA. Coordonne le collectif.',skills:['Python','R','Power BI','IA'],email:'prosper@datalab.bi'},
+  {slug:'aline',name:'Aline Niyonkuru',role:'Data Analyst',emoji:'👩‍💻',bio:'Experte en analyse exploratoire et storytelling.',skills:['R','SQL','Tableau'],email:'aline@datalab.bi'},
+  {slug:'jean-claude',name:'Jean-Claude Ndayishimiye',role:'Statisticien',emoji:'👨‍🔬',bio:'Enquêtes complexes et méthodologie.',skills:['SPSS','Stata','Échantillonnage'],email:'jean@datalab.bi'},
+  {slug:'claudine',name:'Claudine Irakoze',role:'Data Scientist',emoji:'👩‍🔬',bio:'Machine learning appliqué aux problèmes locaux.',skills:['Python','scikit-learn','TensorFlow'],email:'claudine@datalab.bi'},
+  {slug:'eric',name:'Éric Bizimana',role:'Ingénieur données',emoji:'👨‍💻',bio:'Pipelines, ETL et cloud.',skills:['SQL','dbt','Airflow'],email:'eric@datalab.bi'},
+  {slug:'divine',name:'Divine Uwimana',role:'Visualisation',emoji:'👩‍🎨',bio:'Transformer les chiffres en récits visuels.',skills:['D3.js','Power BI','Figma'],email:'divine@datalab.bi'},
+  {slug:'fabrice',name:'Fabrice Habonimana',role:'Analyste BI',emoji:'👨‍💼',bio:'Spécialiste Power BI et modélisation de données.',skills:['Power BI','DAX','SQL'],email:'fabrice@datalab.bi'},
+  {slug:'sandrine',name:'Sandrine Nkurunziza',role:'Statisticienne',emoji:'👩‍🔬',bio:'Analyse de données de santé et enquêtes.',skills:['R','SPSS','Santé publique'],email:'sandrine@datalab.bi'},
+  {slug:'emmanuel',name:'Emmanuel Nsabimana',role:'Data Engineer',emoji:'👨‍💻',bio:'Infrastructure data et pipelines ETL.',skills:['Python','Airflow','PostgreSQL'],email:'emmanuel@datalab.bi'},
+  {slug:'chantal',name:'Chantal Iradukunda',role:'Chargée de contenu',emoji:'👩‍📝',bio:'Rédaction, vulgarisation et communication.',skills:['Rédaction','Communication','Storytelling'],email:'chantal@datalab.bi'}
+];
+
+const PROJECTS = [
+  {id:1,title:'Analyse de la pauvreté au Burundi',cat:'statistique',catLabel:'Statistique',emoji:'📈',desc:'Analyse multivariée des données EDS 2023 pour identifier les déterminants de la pauvreté.',tags:['R','ECharts','EDS'],year:2026,client:'PNUD',long:'Ce projet analyse les données de l\'Enquête Démographique et de Santé 2023 pour identifier les déterminants de la pauvreté multidimensionnelle. Nous avons utilisé des modèles de régression logistique et des méthodes d\'analyse factorielle.',methodology:'Régression logistique multiple · Analyse en composantes principales · Clustering hiérarchique',results:'Identification de 5 déterminants clés · Production de recommandations politiques · Tableau de bord interactif'},
+  {id:2,title:'Dashboard santé communautaire',cat:'viz',catLabel:'Data Viz',emoji:'🏥',desc:'Tableau de bord interactif pour 5 provinces.',tags:['Power BI','PostgreSQL'],year:2025,client:'UNICEF',long:'Dashboard Power BI permettant de suivre en temps réel les indicateurs de santé communautaire dans 5 provinces du Burundi.',methodology:'Modélisation en étoile · DAX avancé · Actualisation temps réel',results:'5 provinces couvertes · 47 indicateurs suivis · 12 utilisateurs quotidiens'},
+  {id:3,title:'Prédiction du prix du café',cat:'machine-learning',catLabel:'Machine Learning',emoji:'☕',desc:'Modèle prédictif des prix du café.',tags:['Python','scikit-learn'],year:2026,client:'ODECA',long:'Modèle de régression supervisée prédisant les prix du café au Burundi à partir de données historiques et de variables macroéconomiques.',methodology:'Régression · XGBoost · Validation croisée temporelle',results:'Précision MAPE 12% · Déploiement API REST · Adoption par ODECA'},
+  {id:4,title:'Enquête agricole digitale',cat:'enquete',catLabel:'Enquête',emoji:'🌾',desc:"Enquête auprès de 500 coopératives.",tags:['KoBoToolbox','Stata'],year:2025,client:'FAO',long:'Conception et analyse d\'une enquête exhaustive auprès de 500 coopératives agricoles burundaises.',methodology:'Échantillonnage stratifié · Collecte KoBoToolbox · Analyse Stata',results:'500 coopératives enquêtées · Taux réponse 92% · Rapport de 120 pages'},
+  {id:5,title:'Détection de fraude mobile money',cat:'machine-learning',catLabel:'Machine Learning',emoji:'💳',desc:"Détection d'anomalies transactions.",tags:['Python','Anomaly Detection'],year:2026,client:'Confidentiel',long:'Modèle d\'isolation forest pour détecter les transactions suspectes sur mobile money.',methodology:'Isolation Forest · Feature engineering · Validation métier',results:'Précision 94% · Rappel 87% · Économies estimées 500M FBu'},
+  {id:6,title:'Cartographie des marchés',cat:'viz',catLabel:'Data Viz',emoji:'🗺️',desc:'Visualisation géospatiale des flux commerciaux.',tags:['QGIS','Leaflet'],year:2025,client:'Banque Mondiale',long:'Création d\'une cartographie interactive des principaux marchés et flux commerciaux au Burundi.',methodology:'QGIS · Leaflet · Données géospatiales OpenStreetMap',results:'38 marchés cartographiés · Flux inter-provinciaux · Carte web interactive'},
+  {id:7,title:'Analyse mortalité infantile',cat:'statistique',catLabel:'Statistique',emoji:'👶',desc:'Étude des déterminants de la mortalité infantile.',tags:['R','Stata','EDS'],year:2025,client:'OMS',long:'Analyse approfondie des facteurs associés à la mortalité infantile à partir des données EDS 2016-2023.',methodology:'Modèles de survie · Analyse multiniveau',results:'Rapport OMS · 3 recommandations · Publication scientifique'},
+  {id:8,title:'Dashboard éducation',cat:'viz',catLabel:'Data Viz',emoji:'📚',desc:'Suivi des indicateurs éducatifs par province.',tags:['Power BI','SQL'],year:2026,client:'UNESCO',long:'Tableau de bord pour le suivi des indicateurs d\'éducation au niveau national.',methodology:'Modèle en étoile · 60 indicateurs · Multi-langues',results:'Déploiement national · Formation 20 agents'},
+  {id:9,title:'Segmentation clients télécom',cat:'machine-learning',catLabel:'Machine Learning',emoji:'📱',desc:'Clustering des clients par comportement.',tags:['Python','K-Means'],year:2025,client:'Confidentiel',long:'Segmentation comportementale des abonnés d\'un opérateur télécom.',methodology:'K-Means · DBSCAN · Analyse RFM',results:'5 segments identifiés · Campagnes ciblées +30% ROI'},
+  {id:10,title:'Enquête satisfaction usagers',cat:'enquete',catLabel:'Enquête',emoji:'📋',desc:'Enquête de satisfaction des services publics.',tags:['KoBoToolbox','R'],year:2025,client:'Ministère',long:'Enquête nationale de satisfaction des usagers des services publics.',methodology:'Échantillonnage aléatoire stratifié · Questionnaire digital',results:'2000 répondants · Indice satisfaction 68/100'},
+  {id:11,title:'Prévision des ventes agricoles',cat:'machine-learning',catLabel:'Machine Learning',emoji:'🌾',desc:'Modèle de prévision des récoltes.',tags:['Python','Prophet'],year:2026,client:'FAO',long:'Prévision des volumes de récolte à partir de données météo et historiques.',methodology:'Séries temporelles Prophet · Variables exogènes',results:'MAPE 15% · Alertes précoces · Diffusion mensuelle'},
+  {id:12,title:'Atlas statistique du Burundi',cat:'viz',catLabel:'Data Viz',emoji:'🗺️',desc:'Atlas interactif de données nationales.',tags:['D3.js','Leaflet','PostgreSQL'],year:2026,client:'ISTEEBU',long:'Un atlas web interactif regroupant les principales statistiques nationales par province et commune.',methodology:'D3.js · Cartographie · 200+ indicateurs',results:'18 provinces · 119 communes · Réutilisation libre'},
+  {id:13,title:'Analyse genre et emploi',cat:'statistique',catLabel:'Statistique',emoji:'👩‍💼',desc:'Étude des disparités de genre sur le marché du travail.',tags:['R','Stata'],year:2025,client:'ONU Femmes',long:'Analyse des écarts de genre dans l\'emploi et les revenus au Burundi.',methodology:'Décomposition Oaxaca-Blinder · Analyse sectorielle',results:'Rapport national · Recommandations politiques'},
+  {id:14,title:'Dashboard e-commerce',cat:'viz',catLabel:'Data Viz',emoji:'🛒',desc:'Tableau de bord temps réel pour e-commerce.',tags:['Power BI','BigQuery'],year:2026,client:'Startup locale',long:'Dashboard temps réel pour le suivi des ventes et comportements d\'achat.',methodology:'BigQuery · Power BI · Streaming temps réel',results:'Temps de réponse <500ms · 8 KPIs suivis'},
+  {id:15,title:'Détection de fake news',cat:'machine-learning',catLabel:'Machine Learning',emoji:'📰',desc:'Classification automatique de contenus suspects.',tags:['Python','NLP'],year:2026,client:'Projet de recherche',long:'Modèle NLP pour détecter automatiquement les fausses informations en kirundi et français.',methodology:'BERT multilingual · Fine-tuning · Évaluation manuelle',results:'F1 0.87 · Prototype API · Publication académique'},
+  {id:16,title:'Enquête nutritionnelle',cat:'enquete',catLabel:'Enquête',emoji:'🥗',desc:'Étude de l\'état nutritionnel des enfants.',tags:['SMART','Stata'],year:2025,client:'UNICEF',long:'Enquête nutritionnelle SMART dans 3 provinces.',methodology:'Méthodologie SMART · Mesures anthropométriques',results:'3000 enfants enquêtés · Cartographie malnutrition'},
+  {id:17,title:'Modélisation climatique',cat:'machine-learning',catLabel:'Machine Learning',emoji:'🌡️',desc:'Analyse des tendances climatiques.',tags:['Python','XGBoost'],year:2025,client:'IGEBU',long:'Modélisation des séries climatiques historiques 1980-2025.',methodology:'XGBoost · LSTM · Séries temporelles',results:'Cartographie risques · Alertes précoces'},
+  {id:18,title:'Portrait statistique jeunesse',cat:'statistique',catLabel:'Statistique',emoji:'👥',desc:'Profil statistique de la jeunesse burundaise.',tags:['R','EDS'],year:2026,client:'Ministère Jeunesse',long:'Analyse descriptive de la situation des jeunes de 15 à 35 ans.',methodology:'Analyse descriptive · Segmentation',results:'Rapport 80 pages · 40 graphiques'}
+];
+
+const ARTICLES = [
+  {id:1,title:'Les 4 V de la donnée expliqués simplement',cat:'Fondamentaux',excerpt:'Volume, vitesse, variété, véracité : les fondamentaux.',date:'15 Nov 2026',read:'6 min',author:'Aline',content:'<h2>Qu\'est-ce que les 4 V ?</h2><p>Les 4 V de la donnée sont :</p><ul><li><strong>Volume</strong> : la quantité de données</li><li><strong>Vitesse</strong> : la rapidité de génération</li><li><strong>Variété</strong> : la diversité des formats</li><li><strong>Véracité</strong> : la fiabilité des données</li></ul><p>Ces quatre dimensions permettent de caractériser tout jeu de données.</p>'},
+  {id:2,title:'Pourquoi le Burundi a besoin de data scientists',cat:'Société',excerpt:'Opportunités dans les secteurs clés.',date:'08 Nov 2026',read:'5 min',author:'Prosper',content:'<h2>Le contexte burundais</h2><p>Le Burundi produit chaque année des dizaines de statisticiens. Pourtant les entreprises manquent de profils data.</p>'},
+  {id:3,title:'R vs Python : quel outil choisir en 2026 ?',cat:'Outils',excerpt:'Comparatif pratique.',date:'01 Nov 2026',read:'8 min',author:'Claudine',content:'<h2>R ou Python ?</h2><p>Les deux langages dominent la data science. R excelle en statistiques, Python en production.</p>'},
+  {id:4,title:'5 erreurs de visualisation à éviter',cat:'Data Viz',excerpt:'Les pièges qui ruinent vos dashboards.',date:'25 Oct 2026',read:'4 min',author:'Divine',content:'<h2>Erreurs courantes</h2><ol><li>Trop de couleurs</li><li>Graphiques 3D inutiles</li><li>Échelles trompeuses</li><li>Manque de contexte</li><li>Absence de source</li></ol>'},
+  {id:5,title:'Construire un portfolio data en Afrique',cat:'Carrière',excerpt:'Conseils pour jeunes statisticiens.',date:'18 Oct 2026',read:'7 min',author:'Prosper',content:'<h2>Le portfolio data</h2><p>Un bon portfolio raconte une histoire. Il montre votre capacité à résoudre des problèmes concrets.</p>'},
+  {id:6,title:'Introduction à l\'échantillonnage stratifié',cat:'Méthodes',excerpt:'Théorie et pratique.',date:'10 Oct 2026',read:'9 min',author:'Jean-Claude',content:'<h2>Échantillonnage stratifié</h2><p>Technique d\'échantillonnage qui divise la population en sous-groupes homogènes appelés strates.</p>'}
+];
+
+const EVENTS = [
+  {id:1,day:'22',month:'Nov',title:'Atelier découverte : R en 2 heures',location:'ISTEEBU, Bujumbura',time:'14h-16h',type:'Atelier',free:true,desc:'Session d\'initiation gratuite.',speakers:['Aline Niyonkuru','Claudine Irakoze']},
+  {id:2,day:'05',month:'Déc',title:'DataCamp Bujumbura',location:'Innovation Hub',time:'9h-18h',type:'Conférence',free:false,desc:'Journée de conférences et networking.',speakers:['Prosper Nindagiye','Experts internationaux']},
+  {id:3,day:'15',month:'Déc',title:'Workshop Power BI avancé',location:'En ligne',time:'18h-20h',type:'Atelier',free:false,desc:'Maîtrisez DAX et la modélisation.',speakers:['Divine Uwimana','Fabrice Habonimana']},
+  {id:4,day:'10',month:'Jan',title:'Rencontre communauté #5',location:'Bujumbura',time:'17h-19h',type:'Communauté',free:true,desc:'Rencontre mensuelle de la communauté.',speakers:['DataLab']}
+];
+
+const NEWS = [
+  {id:1,day:'18',month:'Nov',year:2026,cat:'prix',title:"DataLab remporte le prix de l'innovation 2026",excerpt:'Distingué au Forum national.',source:'ISTEEBU',content:'<p>Le collectif DataLab a été distingué lors du Forum national de l\'entrepreneuriat numérique à Bujumbura pour son travail sur l\'analyse des données de santé publique.</p><h2>Un prix qui récompense 2 ans d\'efforts</h2><p>Ce prix vient reconnaître la qualité du travail accompli par les membres du collectif, notamment sur le projet de dashboard santé communautaire mené avec l\'UNICEF.</p><h2>Perspectives</h2><p>Cette reconnaissance ouvre de nouvelles portes pour DataLab, notamment dans les partenariats internationaux.</p>'},
+  {id:2,day:'15',month:'Nov',year:2026,cat:'evenement',title:'Retour sur notre atelier Power BI',excerpt:'Plus de 60 étudiants ont participé.',source:'DataLab',content:'<p>L\'atelier Power BI organisé le 12 novembre à l\'ISTEEBU a réuni plus de 60 étudiants enthousiastes.</p>'},
+  {id:3,day:'12',month:'Nov',year:2026,cat:'formation',title:'Ouverture des inscriptions 2027',excerpt:'Trois nouveaux parcours.',source:'DataLab',content:'<p>Les inscriptions pour la promotion 2027 sont ouvertes. Trois parcours : R avancé, Power BI et cartographie QGIS.</p>'},
+  {id:4,day:'08',month:'Nov',year:2026,cat:'communaute',title:'La communauté dépasse 300 abonnés',excerpt:'Merci à tous !',source:'DataLab',content:'<p>Notre communauté a franchi le cap des 300 abonnés newsletter. Merci à tous ceux qui nous suivent !</p>'},
+  {id:5,day:'05',month:'Nov',year:2026,cat:'partenariat',title:'Nouveau partenariat UNICEF',excerpt:'Analyse indicateurs santé.',source:'UNICEF',content:'<p>DataLab accompagnera l\'UNICEF Burundi dans l\'analyse des indicateurs de santé maternelle dans 3 provinces.</p>'},
+  {id:6,day:'28',month:'Oct',year:2026,cat:'data',title:'Publication pauvreté multidimensionnelle',excerpt:'5 déterminants identifiés.',source:'DataLab',content:'<p>Notre analyse des données EDS 2023 met en lumière 5 déterminants clés de la pauvreté multidimensionnelle.</p>'},
+  {id:7,day:'20',month:'Oct',year:2026,cat:'collectif',title:'Trois nouveaux membres',excerpt:'Bienvenue à Divine, Éric, Claudine.',source:'DataLab',content:'<p>Le collectif accueille trois nouveaux membres qui renforcent les pôles visualisation, ingénierie et science des données.</p>'},
+  {id:8,day:'10',month:'Oct',year:2026,cat:'evenement',title:'Atelier gratuit : R en 2 heures',excerpt:'Session ouverte.',source:'DataLab',content:'<p>Une session d\'initiation gratuite à R aura lieu le 22 novembre à l\'ISTEEBU.</p>'},
+  {id:9,day:'01',month:'Oct',year:2026,cat:'formation',title:'Cohorte 2026 : 15 apprenants diplômés',excerpt:'Taux de réussite 94%.',source:'DataLab',content:'<p>La promotion 2026 vient de clôturer sa formation avec 15 apprenants diplômés sur 16 inscrits.</p>'},
+  {id:10,day:'25',month:'Sep',year:2026,cat:'data',title:'Analyse genre et emploi publiée',excerpt:'Rapport ONU Femmes.',source:'ONU Femmes',content:'<p>Notre étude sur les disparités de genre sur le marché du travail a été publiée par ONU Femmes.</p>'},
+  {id:11,day:'18',month:'Sep',year:2026,cat:'prix',title:'DataLab finaliste Hackathon Africa',excerpt:'Top 10 continental.',source:'Africa Tech',content:'<p>Notre projet d\'atlas statistique a été retenu dans le top 10 du Hackathon Africa Tech.</p>'},
+  {id:12,day:'10',month:'Sep',year:2026,cat:'partenariat',title:'Collaboration ISTEEBU officialisée',excerpt:'Convention signée.',source:'ISTEEBU',content:'<p>Une convention de partenariat académique a été signée entre DataLab et l\'ISTEEBU.</p>'},
+  {id:13,day:'01',month:'Sep',year:2026,cat:'collectif',title:'Rentrée du collectif 2026-2027',excerpt:'Nouveaux objectifs.',source:'DataLab',content:'<p>Le collectif fait sa rentrée avec de nouveaux objectifs : 30 projets, 500 abonnés et 10 partenariats.</p>'},
+  {id:14,day:'20',month:'Août',year:2026,cat:'evenement',title:'DataCamp réussi',excerpt:'200 participants.',source:'DataLab',content:'<p>Le DataCamp de Bujumbura a réuni 200 participants pour une journée intense de conférences et ateliers.</p>'},
+  {id:15,day:'15',month:'Août',year:2026,cat:'formation',title:'Nouvelle formation cartographie QGIS',excerpt:'Parcours 4 semaines.',source:'DataLab',content:'<p>Un nouveau parcours de cartographie QGIS est disponible à partir d\'octobre.</p>'}
+];
+
+const COURSES = [
+  {id:1,emoji:'📘',title:"R pour l'analyse statistique",desc:'Manipulation de données, statistiques descriptives et visualisation avec tidyverse.',level:'debutant',levelLabel:'Débutant',duration:'6 semaines',modules:12,cat:'r',price:'50 000 FBu',long:'Apprenez R de zéro : installation, syntaxe, manipulation avec dplyr, visualisation avec ggplot2. À la fin vous pourrez produire vos propres analyses statistiques.',objectives:['Maîtriser la syntaxe R','Manipuler des données avec dplyr','Créer des graphiques ggplot2','Réaliser des analyses statistiques'],prerequisites:'Aucun prérequis'},
+  {id:2,emoji:'🐍',title:'Python pour la data science',desc:'NumPy, pandas, scikit-learn et les bases du ML.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'8 semaines',modules:16,cat:'python',price:'80 000 FBu',long:'Parcours complet Python pour la data : manipulation, analyse, visualisation et introduction au machine learning.',objectives:['Maîtriser pandas et NumPy','Créer des visualisations Matplotlib','Entraîner des modèles ML simples','Déployer un notebook'],prerequisites:'Bases de programmation'},
+  {id:3,emoji:'📊',title:'Power BI : du dataset au dashboard',desc:'Construire des dashboards interactifs professionnels.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'4 semaines',modules:10,cat:'powerbi',price:'60 000 FBu',long:'Maîtrisez Power BI Desktop : connexion aux données, modélisation, DAX, visualisations et publication.',objectives:['Modélisation en étoile','DAX avancé','Publication Power BI Service'],prerequisites:'Notions Excel'},
+  {id:4,emoji:'🎯',title:'Échantillonnage stratifié',desc:'Théorie et pratique pour enquêtes nationales.',level:'avance',levelLabel:'Avancé',duration:'5 semaines',modules:8,cat:'echantillonnage',price:'70 000 FBu',long:'Formation avancée sur les techniques d\'échantillonnage : aléatoire simple, stratifié, en grappes.',objectives:['Calcul de taille d\'échantillon','Stratification optimale','Correction des biais'],prerequisites:'Statistiques descriptives'},
+  {id:5,emoji:'🗺️',title:'Cartographie avec QGIS',desc:'Créer des cartes thématiques et analyser des données géospatiales.',level:'debutant',levelLabel:'Débutant',duration:'4 semaines',modules:9,cat:'cartographie',price:'45 000 FBu',long:'Initiation à QGIS : interface, import de données, symbologie, mise en page et export.',objectives:['Manipuler l\'interface QGIS','Créer des cartes thématiques','Exporter en PDF/web'],prerequisites:'Aucun'},
+  {id:6,emoji:'📑',title:'Excel avancé pour analystes',desc:'Tableaux croisés, Power Query et automatisation.',level:'debutant',levelLabel:'Débutant',duration:'3 semaines',modules:7,cat:'excel',price:'30 000 FBu',long:'Excel pour analystes : formules avancées, TCD, Power Query et macros VBA.',objectives:['Maîtriser TCD','Power Query','Macros VBA'],prerequisites:'Excel basique'},
+  {id:7,emoji:'🤖',title:'Machine learning appliqué',desc:'Régression, classification, clustering en Python.',level:'avance',levelLabel:'Avancé',duration:'10 semaines',modules:20,cat:'python',price:'120 000 FBu',long:'ML complet : régression, classification, clustering, évaluation et déploiement.',objectives:['Modèles supervisés','Modèles non supervisés','Évaluation et tuning'],prerequisites:'Python intermédiaire'},
+  {id:8,emoji:'📈',title:'Data storytelling',desc:'Raconter une histoire avec les données.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'3 semaines',modules:6,cat:'visualisation',price:'40 000 FBu',long:'Transformez vos analyses en récits percutants : structure, choix graphiques, présentation.',objectives:['Choisir les bons graphiques','Structurer un récit','Présenter efficacement'],prerequisites:'Bases visualisation'},
+  {id:9,emoji:'📊',title:'Power BI DAX avancé',desc:'Formules complexes et time intelligence.',level:'avance',levelLabel:'Avancé',duration:'4 semaines',modules:10,cat:'powerbi',price:'70 000 FBu',long:'Approfondissement DAX : time intelligence, calculate, filter, variables.',objectives:['Time intelligence','CALCULATE avancé','Optimisation performances'],prerequisites:'Power BI intermédiaire'},
+  {id:10,emoji:'🐍',title:'Python ETL & pipelines',desc:'Automatisez vos flux de données.',level:'avance',levelLabel:'Avancé',duration:'6 semaines',modules:12,cat:'python',price:'90 000 FBu',long:'Construction de pipelines ETL avec Airflow, pandas et SQL.',objectives:['Pipelines ETL','Orchestration Airflow','Tests et monitoring'],prerequisites:'Python + SQL'},
+  {id:11,emoji:'🗺️',title:'Analyse spatiale avec R',desc:'Données géographiques et cartographie en R.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'5 semaines',modules:10,cat:'cartographie',price:'55 000 FBu',long:'Analyse spatiale en R avec sf, sp et tmap.',objectives:['Manipulation objets sf','Jointures spatiales','Cartes interactives'],prerequisites:'R intermédiaire'},
+  {id:12,emoji:'📘',title:'R avancé : tidymodels',desc:'Modélisation ML en R.',level:'avance',levelLabel:'Avancé',duration:'6 semaines',modules:12,cat:'r',price:'85 000 FBu',long:'Modélisation avancée avec tidymodels : régression, classification et tuning.',objectives:['tidymodels','Recipes','Tuning'],prerequisites:'R intermédiaire'},
+  {id:13,emoji:'🎯',title:'Enquêtes complexes en R',desc:'Analyse d\'enquêtes avec survey.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'5 semaines',modules:9,cat:'echantillonnage',price:'65 000 FBu',long:'Analyse d\'enquêtes complexes avec le package survey.',objectives:['Plan de sondage','Estimation','Variance'],prerequisites:'R + échantillonnage'},
+  {id:14,emoji:'📑',title:'Google Sheets pour analystes',desc:'Collaboration et automatisation.',level:'debutant',levelLabel:'Débutant',duration:'2 semaines',modules:5,cat:'excel',price:'20 000 FBu',long:'Google Sheets : formules avancées, query, automatisation Apps Script.',objectives:['Formules avancées','Query','Apps Script'],prerequisites:'Bases tableur'},
+  {id:15,emoji:'📈',title:'D3.js : visualisations interactives',desc:'Visualisations web personnalisées.',level:'avance',levelLabel:'Avancé',duration:'6 semaines',modules:12,cat:'visualisation',price:'95 000 FBu',long:'D3.js pour des visualisations web sur mesure.',objectives:['Selections','Data binding','Transitions','Cartes'],prerequisites:'JavaScript'},
+  {id:16,emoji:'📊',title:'Tableau Desktop essentiel',desc:'Maîtrisez Tableau de A à Z.',level:'debutant',levelLabel:'Débutant',duration:'3 semaines',modules:8,cat:'visualisation',price:'50 000 FBu',long:'Tableau Desktop complet : connexion, visualisations, dashboards.',objectives:['Connexion données','Visualisations','Dashboards'],prerequisites:'Aucun'},
+  {id:17,emoji:'🐍',title:'Python pour la data - niveau 2',desc:'Approfondissement pandas et visualisation.',level:'intermediaire',levelLabel:'Intermédiaire',duration:'5 semaines',modules:10,cat:'python',price:'65 000 FBu',long:'Approfondissement pandas, plotly et seaborn.',objectives:['Groupby avancé','Plotly interactif','Séries temporelles'],prerequisites:'Python base'},
+  {id:18,emoji:'📘',title:'R : visualisation ggplot2',desc:'Graphiques professionnels en R.',level:'debutant',levelLabel:'Débutant',duration:'2 semaines',modules:5,cat:'r',price:'25 000 FBu',long:'Maîtrise complète de ggplot2.',objectives:['Grammaire des graphiques','Thèmes','Facettes'],prerequisites:'Bases R'}
+];
+
+const RESSOURCES = [
+  {id:1,title:'Dataset EDS 2023 Burundi',cat:'dataset',emoji:'📊',desc:'Enquête Démographique et de Santé complète.',license:'CC-BY',source:'DHS Program',size:'45 Mo',long:'Le jeu de données complet de l\'EDS 2023 avec toutes les variables sociodémographiques, de santé et nutritionnelles.'},
+  {id:2,title:'Cours open source R for Data Science',cat:'cours',emoji:'📘',desc:'Livre gratuit de Hadley Wickham.',license:'CC-BY-NC',source:'r4ds.hadley.nz',size:'—',long:'R for Data Science (2e édition) : livre complet et gratuit sur la data science avec R et tidyverse.'},
+  {id:3,title:'Cheatsheet pandas',cat:'outil',emoji:'🐍',desc:'Mémo complet pandas en PDF.',license:'MIT',source:'pandas.pydata.org',size:'1 Mo',long:'Toutes les commandes essentielles de pandas en une seule page imprimable.'},
+  {id:4,title:'Dataset prix café Burundi',cat:'dataset',emoji:'☕',desc:'Séries historiques 2010-2025.',license:'ODbL',source:'ODECA',size:'2 Mo',long:'Séries historiques des prix du café au Burundi sur 15 ans, avec variables macroéconomiques.'},
+  {id:5,title:'Tutoriel QGIS officiel',cat:'cours',emoji:'🗺️',desc:'Documentation complète QGIS.',license:'CC-BY-SA',source:'qgis.org',size:'—',long:'Documentation officielle QGIS, du niveau débutant au niveau avancé.'},
+  {id:6,title:'Template Power BI DataLab',cat:'outil',emoji:'📊',desc:'Template avec charte DataLab.',license:'MIT',source:'DataLab',size:'5 Mo',long:'Template Power BI prêt à l\'emploi avec la charte graphique DataLab intégrée.'},
+  {id:7,title:'Dataset recensement 2024',cat:'dataset',emoji:'📋',desc:'Recensement général de la population.',license:'Public',source:'ISTEEBU',size:'120 Mo',long:'Données du recensement général de la population et de l\'habitat 2024.'},
+  {id:8,title:'Cours Python pour tous',cat:'cours',emoji:'🐍',desc:'Cours gratuit en français.',license:'CC-BY',source:'OpenClassrooms',size:'—',long:'Cours d\'initiation à Python, adapté aux débutants francophones.'},
+  {id:9,title:'Notebook Jupyter EDA type',cat:'outil',emoji:'📓',desc:'Notebook d\'analyse exploratoire modèle.',license:'MIT',source:'DataLab',size:'500 Ko',long:'Notebook Jupyter type pour une analyse exploratoire complète avec pandas et matplotlib.'},
+  {id:10,title:'Dataset indicateurs ODD',cat:'dataset',emoji:'🎯',desc:'Objectifs développement durable Burundi.',license:'CC-BY',source:'ONU',size:'30 Mo',long:'Tous les indicateurs ODD disponibles pour le Burundi.'},
+  {id:11,title:'Guide Stata en français',cat:'cours',emoji:'📘',desc:'Manuel Stata francophone.',license:'Gratuit',source:'StataCorp',size:'—',long:'Guide complet de Stata en français pour les analyses statistiques.'},
+  {id:12,title:'Dashboard Excel template',cat:'outil',emoji:'📊',desc:'Dashboard Excel clé en main.',license:'MIT',source:'DataLab',size:'3 Mo',long:'Dashboard Excel interactif avec TCD, graphiques et slicers.'},
+  {id:13,title:'Dataset santé maternelle',cat:'dataset',emoji:'🏥',desc:'Indicateurs santé maternelle.',license:'CC-BY',source:'UNICEF',size:'15 Mo',long:'Indicateurs de santé maternelle dans 5 provinces du Burundi.'},
+  {id:14,title:'Cours SQL avancé',cat:'cours',emoji:'🗄️',desc:'SQL pour analystes.',license:'CC-BY',source:'SQLZoo',size:'—',long:'Cours SQL avancé : jointures, sous-requêtes, window functions.'},
+  {id:15,title:'Extension QGIS DataLab',cat:'outil',emoji:'🗺️',desc:'Scripts QGIS utiles.',license:'MIT',source:'DataLab',size:'2 Mo',long:'Collection de scripts QGIS pour cartographie statistique.'},
+  {id:16,title:'Dataset éducation nationale',cat:'dataset',emoji:'📚',desc:'Statistiques éducation.',license:'CC-BY',source:'UNESCO',size:'20 Mo',long:'Statistiques éducatives au Burundi par province.'},
+  {id:17,title:'Guide débuter en data science',cat:'cours',emoji:'🚀',desc:'Guide pour se lancer.',license:'CC-BY',source:'DataLab',size:'—',long:'Guide complet pour se lancer dans la data science depuis zéro.'},
+  {id:18,title:'Template Storytelling',cat:'outil',emoji:'🎨',desc:'Template présentation data.',license:'MIT',source:'DataLab',size:'4 Mo',long:'Template de présentation pour raconter vos analyses.'}
+];
+
+const VIDEOS = [
+  {id:1,emoji:'📊',title:'Introduction à R',duration:'12:34',category:'tutoriel',author:'Aline N.',views:'1.2k',desc:'Découvrez R et RStudio en 12 minutes.',long:'Une introduction complète à R et RStudio pour bien démarrer.'},
+  {id:2,emoji:'🐍',title:'Python pour la data : les bases',duration:'18:20',category:'tutoriel',author:'Claudine I.',views:'890',desc:'NumPy, pandas et premières analyses.',long:'Tutoriel Python pour les data scientists débutants.'},
+  {id:3,emoji:'🎤',title:'Table ronde : la data au Burundi',duration:'45:12',category:'conference',author:'DataLab',views:'2.3k',desc:'Table ronde avec des experts.',long:'Table ronde avec 5 experts de la data au Burundi.'},
+  {id:4,emoji:'💡',title:'Interview : Prosper, fondateur',duration:'08:45',category:'interview',author:'Prosper N.',views:'1.5k',desc:'Le parcours de Prosper.',long:'Interview exclusive du fondateur de DataLab.'},
+  {id:5,emoji:'📈',title:'Power BI : dashboard en 15 min',duration:'15:00',category:'tutoriel',author:'Divine U.',views:'3.1k',desc:'Créer un dashboard complet.',long:'Créez un dashboard complet en 15 minutes.'},
+  {id:6,emoji:'🗺️',title:'Atelier QGIS : cartographie',duration:'28:15',category:'atelier',author:'Éric B.',views:'760',desc:'Initiation à QGIS.',long:'Atelier pratique de cartographie avec QGIS.'},
+  {id:7,emoji:'🎓',title:'Cérémonie de clôture 2026',duration:'22:00',category:'conference',author:'DataLab',views:'1.8k',desc:'Retour sur la cohorte 2026.',long:'Cérémonie de clôture de la cohorte 2026.'},
+  {id:8,emoji:'🔍',title:'Échantillonnage expliqué',duration:'10:30',category:'tutoriel',author:'Jean-Claude N.',views:'2.1k',desc:'Les bases de l\'échantillonnage.',long:'Les bases de l\'échantillonnage expliquées simplement.'},
+  {id:9,emoji:'🎬',title:'Coulisses chez DataLab',duration:'06:22',category:'interview',author:'DataLab',views:'980',desc:'Une journée dans notre équipe.',long:'Vidéo des coulisses d\'une journée type.'},
+  {id:10,emoji:'📊',title:'Excel pour analystes',duration:'20:15',category:'tutoriel',author:'Fabrice H.',views:'1.7k',desc:'Maîtriser Excel en 20 minutes.',long:'Les fonctions Excel essentielles pour analystes.'},
+  {id:11,emoji:'🎤',title:'Conférence IA en Afrique',duration:'52:00',category:'conference',author:'DataLab',views:'4.2k',desc:'L\'IA en Afrique de l\'Est.',long:'Conférence sur les perspectives de l\'IA en Afrique de l\'Est.'},
+  {id:12,emoji:'💡',title:'Interview : Claudine data scientist',duration:'15:30',category:'interview',author:'Claudine I.',views:'1.1k',desc:'Parcours d\'une data scientist.',long:'Claudine partage son parcours de data scientist.'},
+  {id:13,emoji:'🛠️',title:'Atelier Git et GitHub',duration:'25:00',category:'atelier',author:'Éric B.',views:'890',desc:'Maîtriser Git pour data.',long:'Atelier Git et GitHub pour data scientists.'},
+  {id:14,emoji:'📊',title:'R : ggplot2 en 10 min',duration:'10:00',category:'tutoriel',author:'Aline N.',views:'2.4k',desc:'Visualisation avec ggplot2.',long:'Tutoriel rapide sur ggplot2 pour visualiser vos données.'},
+  {id:15,emoji:'🎤',title:'Conférence : data et ODD',duration:'38:00',category:'conference',author:'DataLab',views:'1.3k',desc:'La data au service des ODD.',long:'Comment la data peut accélérer les Objectifs de Développement Durable.'},
+  {id:16,emoji:'💡',title:'Interview : Jean-Claude statisticien',duration:'12:00',category:'interview',author:'Jean-Claude N.',views:'760',desc:'Le métier de statisticien.',long:'Le métier de statisticien expliqué par Jean-Claude.'},
+  {id:17,emoji:'🛠️',title:'Atelier R Shiny',duration:'30:00',category:'atelier',author:'Divine U.',views:'1.5k',desc:'Créer une app R Shiny.',long:'Atelier complet sur R Shiny pour créer des applications interactives.'},
+  {id:18,emoji:'📊',title:'Python pandas avancé',duration:'22:00',category:'tutoriel',author:'Claudine I.',views:'1.9k',desc:'Maîtriser pandas.',long:'Tutoriel avancé sur pandas : groupby, merge, pivot.'},
+  {id:19,emoji:'🎤',title:'Conférence DataCamp 2026',duration:'1:20:00',category:'conference',author:'DataLab',views:'5.6k',desc:'Retour sur le DataCamp 2026.',long:'Retour complet sur le DataCamp Bujumbura 2026.'},
+  {id:20,emoji:'💡',title:'Interview : Divine visualisation',duration:'10:00',category:'interview',author:'Divine U.',views:'1.2k',desc:'L\'art de la visualisation.',long:'Divine partage son approche de la visualisation.'}
+];
+
+const PHOTOS = [
+  {id:1,emoji:'👥',title:'Équipe DataLab 2026',cat:'equipe',size:'',date:'Nov 2026',desc:'Photo officielle de l\'équipe.'},
+  {id:2,emoji:'🎓',title:'Remise des certificats',cat:'evenement',size:'wide',date:'Oct 2026',desc:'Cérémonie de remise des certificats cohorte 2026.'},
+  {id:3,emoji:'📊',title:'Atelier Power BI',cat:'evenement',size:'',date:'Nov 2026',desc:'Atelier Power BI à l\'ISTEEBU.'},
+  {id:4,emoji:'🌾',title:'Enquête terrain Ngozi',cat:'terrain',size:'tall',date:'Sep 2026',desc:'Mission terrain pour enquête agricole.'},
+  {id:5,emoji:'💻',title:'Session de code',cat:'equipe',size:'',date:'Nov 2026',desc:'Session de travail collaboratif.'},
+  {id:6,emoji:'🏆',title:'Prix innovation 2026',cat:'evenement',size:'',date:'Nov 2026',desc:'Remise du prix innovation.'},
+  {id:7,emoji:'🗺️',title:'Cartographie participative',cat:'projet',size:'',date:'Oct 2026',desc:'Atelier de cartographie participative.'},
+  {id:8,emoji:'📸',title:'Portrait : Aline',cat:'equipe',size:'',date:'Sep 2026',desc:'Portrait d\'Aline Niyonkuru.'},
+  {id:9,emoji:'🚀',title:'Lancement du site',cat:'evenement',size:'',date:'Août 2026',desc:'Lancement officiel du site DataLab.'},
+  {id:10,emoji:'📈',title:'Dashboard santé',cat:'projet',size:'wide',date:'Juil 2026',desc:'Présentation du dashboard santé.'},
+  {id:11,emoji:'🤝',title:'Partenariat UNICEF',cat:'evenement',size:'',date:'Nov 2026',desc:'Signature du partenariat UNICEF.'},
+  {id:12,emoji:'🎤',title:'Prosper en conférence',cat:'equipe',size:'',date:'Oct 2026',desc:'Prosper lors d\'une conférence.'},
+  {id:13,emoji:'🏫',title:'Formation ISTEEBU',cat:'terrain',size:'',date:'Sep 2026',desc:'Session de formation à l\'ISTEEBU.'},
+  {id:14,emoji:'📊',title:'DataCamp 2026',cat:'evenement',size:'wide',date:'Août 2026',desc:'Vue d\'ensemble du DataCamp 2026.'},
+  {id:15,emoji:'🌾',title:'Terrain Gitega',cat:'terrain',size:'',date:'Juil 2026',desc:'Collecte de données à Gitega.'},
+  {id:16,emoji:'💼',title:'Bureau DataLab',cat:'equipe',size:'',date:'Juin 2026',desc:'Nos bureaux à Bujumbura.'},
+  {id:17,emoji:'📋',title:'Focus group',cat:'projet',size:'',date:'Mai 2026',desc:'Focus group avec bénéficiaires.'},
+  {id:18,emoji:'🎉',title:'Célébration équipe',cat:'evenement',size:'',date:'Août 2026',desc:'Célébration de fin de projet.'},
+  {id:19,emoji:'🌾',title:'Coopérative Kayanza',cat:'terrain',size:'',date:'Juil 2026',desc:'Visite d\'une coopérative à Kayanza.'},
+  {id:20,emoji:'👩‍💻',title:'Aline en formation',cat:'equipe',size:'',date:'Oct 2026',desc:'Aline animant une formation.'},
+  {id:21,emoji:'📊',title:'Dashboard interactif',cat:'projet',size:'',date:'Sep 2026',desc:'Présentation d\'un dashboard interactif.'},
+  {id:22,emoji:'🎤',title:'Table ronde data',cat:'evenement',size:'',date:'Juin 2026',desc:'Table ronde sur la data au Burundi.'}
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   4. AUTH & SESSION
+   ═══════════════════════════════════════════════════════════════ */
+const DEFAULT_USERS = [
+  {email:'prosper@datalab.bi',password:'demo1234',name:'Prosper Nindagiye',role:'membre',avatar:'👨‍💼',bio:'Coordinateur DataLab',spec:'Data & IA'},
+  {email:'aline@datalab.bi',password:'demo1234',name:'Aline Niyonkuru',role:'apprenant',avatar:'👩‍💻',bio:'Data analyst junior',level:'Intermédiaire'},
+  {email:'unicef@partner.bi',password:'demo1234',name:'UNICEF Burundi',role:'partenaire',avatar:'🤝',org:'UNICEF',secteur:'Humanitaire'},
+  {email:'admin@datalab.bi',password:'admin1234',name:'Admin DataLab',role:'admin',avatar:'🛡️'}
+];
+function initUsers(){if(!localStorage.getItem('datalab_users'))localStorage.setItem('datalab_users',JSON.stringify(DEFAULT_USERS))}
+function getUsers(){return JSON.parse(localStorage.getItem('datalab_users')||'[]')}
+function saveUsers(u){localStorage.setItem('datalab_users',JSON.stringify(u))}
+function getSession(){return JSON.parse(localStorage.getItem('datalab_session')||'null')}
+function setSession(u){localStorage.setItem('datalab_session',JSON.stringify(u))}
+function updateSessionUI(){
+  const s = getSession();
+  if(s){
+    document.body.classList.add('has-session');
+    document.getElementById('um-avatar').textContent = s.avatar || '👤';
+    document.getElementById('um-name').textContent = s.name;
+    document.getElementById('um-role').textContent = s.role;
+    const routes = {membre:'#/membre',apprenant:'#/apprenant',partenaire:'#/partenaire',admin:'#/admin'};
+    document.getElementById('um-space-link').href = routes[s.role] || '#/accueil';
+    document.getElementById('um-space-link').textContent = '📊 ' + ({membre:'Espace membre',apprenant:'Espace apprenant',partenaire:'Espace partenaire',admin:'Dashboard admin'}[s.role] || 'Mon espace');
+  } else {
+    document.body.classList.remove('has-session');
+  }
+}
+function toggleUserMenu(e){e.stopPropagation();document.getElementById('user-menu').classList.toggle('open');document.getElementById('lang-dd').classList.remove('open')}
+function logout(){if(!confirm('Se déconnecter ?'))return;localStorage.removeItem('datalab_session');updateSessionUI();toast('👋 Déconnecté·e');location.hash='#/accueil';setTimeout(()=>location.reload(),200)}
+function fillLogin(email,pwd){document.getElementById('login-email').value=email;document.getElementById('login-password').value=pwd}
+function handleLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pwd = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  const user = getUsers().find(u=>u.email.toLowerCase()===email&&u.password===pwd);
+  if(!user){msg.className='auth-form-msg error';msg.textContent='❌ Email ou mot de passe incorrect.';return}
+  setSession(user);
+  msg.className='auth-form-msg success';msg.textContent='✅ Connexion réussie !';
+  toast('✅ Bonjour '+user.name);
+  setTimeout(()=>{
+    const routes = {membre:'#/membre',apprenant:'#/apprenant',partenaire:'#/partenaire',admin:'#/admin'};
+    location.hash = routes[user.role] || '#/accueil';
+    updateSessionUI();
+    msg.className='auth-form-msg';
+  },500);
+}
+function handleRegister(e){
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim().toLowerCase();
+  const pwd = document.getElementById('reg-password').value;
+  const pwd2 = document.getElementById('reg-password2').value;
+  const role = document.getElementById('reg-role').value;
+  const cgu = document.getElementById('reg-cgu').checked;
+  const msg = document.getElementById('register-msg');
+  if(!name||!email||!pwd){msg.className='auth-form-msg error';msg.textContent='⚠️ Remplissez tous les champs.';return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.className='auth-form-msg error';msg.textContent='⚠️ Email invalide.';return}
+  if(pwd.length<6){msg.className='auth-form-msg error';msg.textContent='⚠️ 6 caractères min.';return}
+  if(pwd!==pwd2){msg.className='auth-form-msg error';msg.textContent='⚠️ Mots de passe différents.';return}
+  if(!cgu){msg.className='auth-form-msg error';msg.textContent='⚠️ Acceptez les conditions.';return}
+  const users = getUsers();
+  if(users.find(u=>u.email.toLowerCase()===email)){msg.className='auth-form-msg error';msg.textContent='❌ Compte déjà existant.';return}
+  const avatar = {membre:'👤',apprenant:'🎓',partenaire:'🤝'}[role] || '👤';
+  const newUser = {email,password:pwd,name,role,avatar,bio:''};
+  users.push(newUser);saveUsers(users);setSession(newUser);
+  msg.className='auth-form-msg success';msg.textContent='✅ Compte créé !';
+  toast('🎉 Bienvenue '+name);
+  setTimeout(()=>{
+    const routes = {membre:'#/membre',apprenant:'#/apprenant',partenaire:'#/partenaire'};
+    location.hash = routes[role] || '#/accueil';
+    updateSessionUI();
+    msg.className='auth-form-msg';
+  },600);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. PROGRESSIONS
+   ═══════════════════════════════════════════════════════════════ */
+function initProgressions(email){
+  const key = 'datalab_prog_'+email;
+  if(!localStorage.getItem(key)){
+    const prog = [
+      {course:'R pour l\'analyse statistique',module:4,total:12,hours:18,last:'Hier'},
+      {course:'Power BI : du dataset au dashboard',module:7,total:10,hours:14,last:'Il y a 3 jours'},
+      {course:'Échantillonnage stratifié',module:2,total:8,hours:4,last:'La semaine dernière'}
+    ];
+    localStorage.setItem(key,JSON.stringify(prog));
+  }
+}
+function getProgressions(email){return JSON.parse(localStorage.getItem('datalab_prog_'+email)||'[]')}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. RENDU PUBLIC
+   ═══════════════════════════════════════════════════════════════ */
+function renderTeam(){
+  document.getElementById('team-grid').innerHTML = TEAM.map((m,i)=>`
+    <div class="member card-primary reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/equipe/${m.slug}'">
+      <div class="member-avatar">${m.emoji}</div>
+      <h3>${m.name}</h3>
+      <div class="member-role">${m.role}</div>
+      <p class="member-bio">${m.bio}</p>
+      <div class="member-skills">${m.skills.map(s=>`<span class="skill">${s}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderCategoryFilters(pageId, categories, activeKey){
+  const container = document.getElementById(pageId+'-filters');
+  if(!container) return;
+  container.innerHTML = `
+    <button class="filter-btn ${!activeKey?'active':''}" onclick="location.hash='#/${pageId}'">Toutes</button>
+    ${categories.map(c=>`<button class="filter-btn ${activeKey===c.key?'active':''}" onclick="location.hash='#/${pageId}/${c.key}'">${c.emoji} ${c.label}</button>`).join('')}
+  `;
+}
+
+function renderProjects(activeCat){
+  const list = activeCat ? PROJECTS.filter(p=>p.cat===activeCat) : PROJECTS;
+  const catObj = activeCat ? CATEGORIES.projets.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('projets-title').textContent = catObj ? `${catObj.emoji} ${catObj.label}` : 'Nos projets récents';
+  document.getElementById('projets-sub').textContent = catObj ? `Tous nos projets dans la catégorie ${catObj.label.toLowerCase()}.` : 'Des solutions data concrètes, mesurables et adaptées au contexte burundais.';
+  document.getElementById('projets-count').textContent = `${list.length} projet${list.length>1?'s':''}`;
+  renderCategoryFilters('projets', CATEGORIES.projets, activeCat);
+  
+  document.getElementById('projects-grid').innerHTML = list.map((p,i)=>`
+    <div class="project card-${['primary','purple','pink','amber','emerald','blue','teal','indigo'][i%8]} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/projets/${p.id}'">
+      <div class="project-cover">${p.emoji}</div>
+      <div class="project-body">
+        <div class="project-cat">${p.catLabel}</div>
+        <h3>${p.title}</h3>
+        <p>${p.desc}</p>
+        <div class="project-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderNews(activeCat){
+  const list = activeCat ? NEWS.filter(n=>n.cat===activeCat) : NEWS;
+  const catObj = activeCat ? CATEGORIES.actualites.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('actualites-title').textContent = catObj ? `${catObj.emoji} ${catObj.label}` : 'La vie du collectif';
+  document.getElementById('actualites-sub').textContent = catObj ? `Toutes les actualités dans la catégorie ${catObj.label.toLowerCase()}.` : 'Les dernières nouvelles de DataLab et de l\'écosystème data.';
+  document.getElementById('actualites-count').textContent = `${list.length} actualité${list.length>1?'s':''}`;
+  renderCategoryFilters('actualites', CATEGORIES.actualites, activeCat);
+  
+  document.getElementById('news-list').innerHTML = list.map((n,i)=>`
+    <div class="news-item cat-${n.cat} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/actualites/${n.id}'">
+      <div class="news-meta">${n.day} ${n.month} ${n.year} · ${n.source}</div>
+      <span class="news-cat ${n.cat}">${n.cat}</span>
+      <h3>${n.title}</h3>
+      <p>${n.excerpt}</p>
+    </div>`).join('');
+}
+
+function renderEvents(){
+  document.getElementById('events-grid').innerHTML = EVENTS.map((ev,i)=>`
+    <div class="card card-pink frame-corner reveal" style="transition-delay:${i*0.05}s">
+      <span class="badge ${ev.free?'done':'pending'}" style="margin-bottom:10px">${ev.free?'Gratuit':'Payant'} · ${ev.type}</span>
+      <h3>${ev.title}</h3>
+      <p style="font-size:13px">${ev.desc}</p>
+      <div class="news-meta">📅 ${ev.day} ${ev.month} · 🕐 ${ev.time}</div>
+      <div class="news-meta">📍 ${ev.location}</div>
+    </div>`).join('');
+}
+
+function renderCourses(activeCat){
+  const list = activeCat ? COURSES.filter(c=>c.cat===activeCat) : COURSES;
+  const catObj = activeCat ? CATEGORIES.formation.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('formation-title').textContent = catObj ? `${catObj.emoji} Formations ${catObj.label}` : 'Notre catalogue de formations';
+  document.getElementById('formation-sub').textContent = catObj ? `Toutes nos formations en ${catObj.label}.` : 'Des parcours pratiques pour maîtriser la data.';
+  document.getElementById('formation-count').textContent = `${list.length} formation${list.length>1?'s':''}`;
+  renderCategoryFilters('formation', CATEGORIES.formation, activeCat);
+  
+  document.getElementById('courses-grid').innerHTML = list.map((c,i)=>`
+    <div class="course card-${['emerald','blue','teal','amber','purple','pink','indigo','orange'][i%8]} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/formation/${c.id}'">
+      <div class="course-body">
+        <div style="font-size:42px;margin-bottom:12px">${c.emoji}</div>
+        <h3>${c.title}</h3>
+        <p>${c.desc}</p>
+        <div class="course-meta">
+          <span class="course-level ${c.level}">${c.levelLabel}</span>
+          <span>${c.duration}</span>
+          <span>${c.modules} modules</span>
+        </div>
+        <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ac-a);font-weight:700">
+          <span>${c.price}</span><span>Voir →</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderRessources(activeCat){
+  const list = activeCat ? RESSOURCES.filter(r=>r.cat===activeCat) : RESSOURCES;
+  const catObj = activeCat ? CATEGORIES.bibliotheque.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('biblio-title').textContent = catObj ? `${catObj.emoji} ${catObj.label}` : 'Bibliothèque de ressources';
+  document.getElementById('biblio-sub').textContent = catObj ? `Toutes les ressources de type ${catObj.label.toLowerCase()}.` : 'Datasets, cours et outils pour la data.';
+  document.getElementById('biblio-count').textContent = `${list.length} ressource${list.length>1?'s':''}`;
+  renderCategoryFilters('bibliotheque', CATEGORIES.bibliotheque, activeCat);
+  
+  document.getElementById('ressources-grid').innerHTML = list.map((r,i)=>`
+    <div class="ressource-card card-${['teal','blue','indigo','purple','emerald','cyan'][i%6]} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/bibliotheque/${r.id}'">
+      <div class="project-cover" style="height:120px">${r.emoji}</div>
+      <div class="project-body">
+        <div class="project-cat">${r.cat}</div>
+        <h3>${r.title}</h3>
+        <p>${r.desc}</p>
+        <div class="project-tags"><span>📄 ${r.license}</span><span>${r.size}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderVideos(activeCat){
+  const list = activeCat ? VIDEOS.filter(v=>v.category===activeCat) : VIDEOS;
+  const catObj = activeCat ? CATEGORIES.videos.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('videos-title').textContent = catObj ? `${catObj.emoji} ${catObj.label}s` : 'Notre chaîne vidéo';
+  document.getElementById('videos-sub').textContent = catObj ? `Toutes nos vidéos de type ${catObj.label.toLowerCase()}.` : 'Tutoriels, conférences, interviews et ateliers.';
+  document.getElementById('videos-count').textContent = `${list.length} vidéo${list.length>1?'s':''}`;
+  renderCategoryFilters('videos', CATEGORIES.videos, activeCat);
+  
+  document.getElementById('videos-grid').innerHTML = list.map((v,i)=>`
+    <div class="video-card card-${['pink','purple','blue','indigo','red'][i%5]} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/videos/${v.id}'">
+      <div class="video-thumb">
+        <span class="emoji">${v.emoji}</span>
+        <span class="video-play">▶</span>
+        <span class="video-duration">${v.duration}</span>
+      </div>
+      <div class="video-body">
+        <h3>${v.title}</h3>
+        <div class="video-meta"><span>👤 ${v.author}</span><span>👁️ ${v.views}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderPhotos(activeCat){
+  const list = activeCat ? PHOTOS.filter(p=>p.cat===activeCat) : PHOTOS;
+  const catObj = activeCat ? CATEGORIES.photos.find(c=>c.key===activeCat) : null;
+  
+  document.getElementById('photos-title').textContent = catObj ? `${catObj.emoji} ${catObj.label}` : 'Nos moments en images';
+  document.getElementById('photos-sub').textContent = catObj ? `Toutes les photos de type ${catObj.label.toLowerCase()}.` : 'Événements, équipe, terrain, projets.';
+  document.getElementById('photos-count').textContent = `${list.length} photo${list.length>1?'s':''}`;
+  renderCategoryFilters('photos', CATEGORIES.photos, activeCat);
+  
+  document.getElementById('photos-grid').innerHTML = list.map((p,i)=>`
+    <div class="photo-card ${p.size} reveal" style="transition-delay:${i*0.04}s" onclick="toast('${p.title}')">
+      <div class="photo-visual">${p.emoji}</div>
+      <div class="photo-overlay"><h4>${p.title}</h4><span>${p.cat}</span></div>
+    </div>`).join('');
+}
+
+function renderBlog(){
+  document.getElementById('blog-grid').innerHTML = ARTICLES.map((a,i)=>`
+    <div class="article card-${['purple','pink','indigo','blue','amber','teal'][i%6]} reveal" style="transition-delay:${i*0.05}s" onclick="location.hash='#/blog/${a.id}'">
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="badge purple">${a.cat}</span>
+          <span>${a.date}</span>
+          <span>${a.read}</span>
+        </div>
+        <h3>${a.title}</h3>
+        <p>${a.excerpt}</p>
+        <div style="font-size:12px;color:var(--ac-a);font-weight:700">Lire →</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. DÉTAILS
+   ═══════════════════════════════════════════════════════════════ */
+function renderProjetDetail(id){
+  const p = PROJECTS.find(x=>x.id===+id);
+  if(!p){location.hash='#/projets';return}
+  document.getElementById('page-projet-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">${p.emoji}</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/projets">Projets</a><span>›</span><a href="#/projets/${p.cat}">${p.catLabel}</a><span>›</span><span>${p.title}</span></div>
+        <span class="tag">${p.catLabel}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${p.title}</h1>
+        <div class="detail-meta"><span>📅 ${p.year}</span><span>👤 ${p.client}</span></div>
+        <div class="action-bar">
+          <button class="action-btn view" onclick="toast('Démo bientôt')">🔗 Démo</button>
+          <button class="action-btn edit" onclick="openModal('project',${p.id})">✏️ Modifier</button>
+          <button class="action-btn delete" onclick="deleteProject(${p.id})">🗑️ Supprimer</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">
+        <h2>Présentation</h2>
+        <p>${p.long}</p>
+        <h2>Méthodologie</h2>
+        <p>${p.methodology||'Approche mixte combinant analyse quantitative et validation qualitative.'}</p>
+        <h2>Résultats</h2>
+        <p>${p.results||'Résultats disponibles dans le rapport final.'}</p>
+        <h2>Outils utilisés</h2>
+        <div class="project-tags">${p.tags.map(t=>`<span class="skill">${t}</span>`).join('')}</div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="sidebar-card"><h4>📁 Autres projets</h4><div class="sidebar-list">${PROJECTS.filter(x=>x.id!==p.id).slice(0,5).map(x=>`<a href="#/projets/${x.id}">${x.title.slice(0,32)}…<span>→</span></a>`).join('')}</div></div>
+        <div class="sidebar-card"><h4>💬 Collaborer</h4><p style="font-size:13px">Un projet similaire ?</p><a href="#/contact" class="btn btn-primary btn-sm" style="width:100%;justify-content:center">Nous écrire</a></div>
+      </div>
+    </div></div>`;
+}
+
+function renderMembreDetail(slug){
+  const m = TEAM.find(x=>x.slug===slug);
+  if(!m){location.hash='#/equipe';return}
+  document.getElementById('page-membre-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">${m.emoji}</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/equipe">Équipe</a><span>›</span><span>${m.name}</span></div>
+        <span class="tag">${m.role}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${m.name}</h1>
+        <p style="font-size:15px">${m.bio}</p>
+        <div class="action-bar"><a href="mailto:${m.email}" class="action-btn view">✉️ Contacter</a></div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">
+        <h2>Biographie</h2>
+        <p>${m.name} occupe le poste de ${m.role.toLowerCase()} au sein du collectif DataLab. Passionné·e par la donnée, iel contribue activement aux projets et à la formation des nouvelles générations.</p>
+        <h2>Compétences</h2>
+        <div class="project-tags">${m.skills.map(s=>`<span class="skill">${s}</span>`).join('')}</div>
+      </div>
+      <div class="detail-sidebar"><div class="sidebar-card"><h4>👥 Autres membres</h4><div class="sidebar-list">${TEAM.filter(x=>x.slug!==slug).slice(0,5).map(x=>`<a href="#/equipe/${x.slug}">${x.name}<span>→</span></a>`).join('')}</div></div></div>
+    </div></div>`;
+}
+
+function renderCourseDetail(id){
+  const c = COURSES.find(x=>x.id===+id);
+  if(!c){location.hash='#/formation';return}
+  const session = getSession();
+  document.getElementById('page-course-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">${c.emoji}</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/formation">Formation</a><span>›</span><a href="#/formation/${c.cat}">${CATEGORIES.formation.find(x=>x.key===c.cat)?.label||c.cat}</a><span>›</span><span>${c.title}</span></div>
+        <span class="tag">${c.cat}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${c.title}</h1>
+        <div class="detail-meta"><span class="course-level ${c.level}">${c.levelLabel}</span><span>⏱ ${c.duration}</span><span>📚 ${c.modules} modules</span><span>💰 ${c.price}</span></div>
+        <div class="action-bar">
+          ${session?`<a href="#/apprenant" class="action-btn approve">✓ S'inscrire</a>`:`<a href="#/connexion" class="action-btn view">🔑 Se connecter</a>`}
+          <button class="action-btn edit" onclick="openModal('course',${c.id})">✏️ Modifier</button>
+          <button class="action-btn delete" onclick="toast('Réservé admin')">🗑️ Supprimer</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">
+        <h2>Description</h2>
+        <p>${c.long}</p>
+        <h2>Objectifs</h2>
+        <ul>${(c.objectives||[]).map(o=>`<li>${o}</li>`).join('')}</ul>
+        <h2>Prérequis</h2>
+        <p>${c.prerequisites||'Aucun'}</p>
+        <h2>Programme</h2>
+        <ol>${Array.from({length:Math.min(c.modules,6)},(_,i)=>`<li>Module ${i+1}</li>`).join('')}${c.modules>6?`<li>… et ${c.modules-6} autres modules</li>`:''}</ol>
+      </div>
+      <div class="detail-sidebar">
+        <div class="sidebar-card"><h4>📚 Autres formations</h4><div class="sidebar-list">${COURSES.filter(x=>x.id!==c.id).slice(0,5).map(x=>`<a href="#/formation/${x.id}">${x.title.slice(0,28)}…<span>→</span></a>`).join('')}</div></div>
+        <div class="sidebar-card"><h4>💰 Tarif</h4><p style="font-size:20px;color:var(--ac-a);font-weight:800">${c.price}</p><p style="font-size:12px">Paiement mobile money accepté</p></div>
+      </div>
+    </div></div>`;
+}
+
+function renderNewsDetail(id){
+  const n = NEWS.find(x=>x.id===+id);
+  if(!n){location.hash='#/actualites';return}
+  document.getElementById('page-news-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">📰</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/actualites">Actualités</a><span>›</span><a href="#/actualites/${n.cat}">${n.cat}</a><span>›</span><span>${n.title.slice(0,40)}</span></div>
+        <span class="news-cat ${n.cat}">${n.cat}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px);margin-top:8px">${n.title}</h1>
+        <div class="detail-meta"><span>📅 ${n.day} ${n.month} ${n.year}</span><span>Source : ${n.source}</span></div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">${n.content}</div>
+      <div class="detail-sidebar"><div class="sidebar-card"><h4>📰 Autres actualités</h4><div class="sidebar-list">${NEWS.filter(x=>x.id!==n.id).slice(0,5).map(x=>`<a href="#/actualites/${x.id}">${x.title.slice(0,30)}…<span>→</span></a>`).join('')}</div></div></div>
+    </div></div>`;
+}
+
+function renderBlogDetail(id){
+  const a = ARTICLES.find(x=>x.id===+id);
+  if(!a){location.hash='#/blog';return}
+  document.getElementById('page-blog-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">📝</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/blog">Blog</a><span>›</span><span>${a.title}</span></div>
+        <span class="tag">${a.cat}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${a.title}</h1>
+        <div class="detail-meta"><span>👤 ${a.author}</span><span>📅 ${a.date}</span><span>⏱ ${a.read}</span></div>
+        <div class="action-bar"><button class="action-btn edit" onclick="openModal('article',${a.id})">✏️ Modifier</button><button class="action-btn delete" onclick="toast('Réservé admin')">🗑️ Supprimer</button></div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">${a.content}</div>
+      <div class="detail-sidebar"><div class="sidebar-card"><h4>📝 Autres articles</h4><div class="sidebar-list">${ARTICLES.filter(x=>x.id!==a.id).slice(0,5).map(x=>`<a href="#/blog/${x.id}">${x.title.slice(0,28)}…<span>→</span></a>`).join('')}</div></div></div>
+    </div></div>`;
+}
+
+function renderRessourceDetail(id){
+  const r = RESSOURCES.find(x=>x.id===+id);
+  if(!r){location.hash='#/bibliotheque';return}
+  document.getElementById('page-ressource-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">${r.emoji}</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/bibliotheque">Bibliothèque</a><span>›</span><a href="#/bibliotheque/${r.cat}">${r.cat}</a><span>›</span><span>${r.title}</span></div>
+        <span class="tag">${r.cat}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${r.title}</h1>
+        <div class="detail-meta"><span>📄 ${r.license}</span><span>${r.size}</span><span>Source : ${r.source}</span></div>
+        <div class="action-bar">
+          <button class="action-btn view" onclick="toast('Téléchargement démarré…')">📥 Télécharger</button>
+          <button class="action-btn edit" onclick="openModal('resource',${r.id})">✏️ Modifier</button>
+          <button class="action-btn delete" onclick="toast('Réservé admin')">🗑️ Supprimer</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">
+        <h2>Description</h2>
+        <p>${r.long}</p>
+        <h2>Utilisation</h2>
+        <p>Cette ressource est librement utilisable selon les termes de la licence ${r.license}. Merci de citer la source ${r.source}.</p>
+      </div>
+      <div class="detail-sidebar"><div class="sidebar-card"><h4>📚 Autres ressources</h4><div class="sidebar-list">${RESSOURCES.filter(x=>x.id!==r.id).slice(0,5).map(x=>`<a href="#/bibliotheque/${x.id}">${x.title.slice(0,28)}…<span>→</span></a>`).join('')}</div></div></div>
+    </div></div>`;
+}
+
+function renderVideoDetail(id){
+  const v = VIDEOS.find(x=>x.id===+id);
+  if(!v){location.hash='#/videos';return}
+  document.getElementById('page-video-detail').innerHTML = `
+    <div class="detail-hero"><div class="container">
+      <div class="detail-icon">🎬</div>
+      <div class="detail-info">
+        <div class="breadcrumb"><a href="#/accueil">Accueil</a><span>›</span><a href="#/videos">Vidéos</a><span>›</span><a href="#/videos/${v.category}">${v.category}</a><span>›</span><span>${v.title}</span></div>
+        <span class="tag">${v.category}</span>
+        <h1 style="font-size:clamp(28px,4vw,44px)">${v.title}</h1>
+        <div class="detail-meta"><span>👤 ${v.author}</span><span>⏱ ${v.duration}</span><span>👁️ ${v.views} vues</span></div>
+      </div>
+    </div></div>
+    <div class="detail-body"><div class="container">
+      <div class="detail-content">
+        <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--bg3),var(--bg2));border-radius:var(--card-r);display:grid;place-items:center;font-size:80px;border:var(--card-bd);position:relative">
+          ${v.emoji}
+          <div style="position:absolute;width:80px;height:80px;border-radius:50%;background:rgba(236,72,153,.9);display:grid;place-items:center;font-size:32px;color:#fff;cursor:pointer" onclick="toast('Lecture vidéo bientôt disponible')">▶</div>
+        </div>
+        <h2 style="margin-top:24px">Description</h2>
+        <p>${v.long}</p>
+        <p><em>Cette vidéo est en cours d'hébergement. Le lecteur complet sera disponible prochainement.</em></p>
+      </div>
+      <div class="detail-sidebar"><div class="sidebar-card"><h4>🎬 Autres vidéos</h4><div class="sidebar-list">${VIDEOS.filter(x=>x.id!==v.id).slice(0,5).map(x=>`<a href="#/videos/${x.id}">${x.title.slice(0,28)}…<span>→</span></a>`).join('')}</div></div></div>
+    </div></div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. ESPACES PRIVÉS
+   ═══════════════════════════════════════════════════════════════ */
+function renderMembreSpace(){
+  const s = getSession(); if(!s) return;
+  document.getElementById('membre-avatar').textContent = s.avatar || '👥';
+  document.getElementById('membre-name').textContent = s.name;
+  document.getElementById('membre-welcome').textContent = 'Bienvenue ' + s.name.split(' ')[0] + ' 👋';
+  document.getElementById('membre-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-num">4</div><div class="kpi-lbl">Mes projets</div></div>
+    <div class="kpi"><div class="kpi-num">3</div><div class="kpi-lbl">Mes articles</div></div>
+    <div class="kpi"><div class="kpi-num">6</div><div class="kpi-lbl">Mes ressources</div></div>
+    <div class="kpi"><div class="kpi-num">2</div><div class="kpi-lbl">En relecture</div></div>`;
+  document.getElementById('membre-activity').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Dashboard santé — publié</div><div class="course-row-meta">Il y a 2 jours</div></div><span class="badge done">Publié</span></div>
+    <div class="course-row"><div><div class="course-row-title">Article "4 V" — en relecture</div><div class="course-row-meta">Il y a 5 jours</div></div><span class="badge pending">Relecture</span></div>`;
+  document.getElementById('membre-projects-list').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Dashboard santé</div><div class="course-row-meta">Publié</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('project',2)">✏️</button><button class="action-btn delete" onclick="deleteProject(2)">🗑️</button></div></div>
+    <div class="course-row"><div><div class="course-row-title">Prédiction café</div><div class="course-row-meta">Relecture</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('project',3)">✏️</button><button class="action-btn delete" onclick="deleteProject(3)">🗑️</button></div></div>
+    <div class="course-row"><div><div class="course-row-title">Cartographie marchés</div><div class="course-row-meta">Brouillon</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('project',6)">✏️</button><button class="action-btn delete" onclick="deleteProject(6)">🗑️</button></div></div>`;
+  document.getElementById('membre-articles-list').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Les 4 V de la donnée</div><div class="course-row-meta">Publié</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('article',1)">✏️</button><button class="action-btn delete" onclick="toast('Supprimé')">🗑️</button></div></div>
+    <div class="course-row"><div><div class="course-row-title">R vs Python</div><div class="course-row-meta">Relecture</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('article',3)">✏️</button><button class="action-btn delete" onclick="toast('Supprimé')">🗑️</button></div></div>`;
+  document.getElementById('membre-resources-list').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Dataset EDS 2023</div><div class="course-row-meta">Publié</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('resource',1)">✏️</button><button class="action-btn delete" onclick="toast('Supprimé')">🗑️</button></div></div>`;
+  document.getElementById('membre-profil-name').value = s.name;
+  document.getElementById('membre-profil-bio').value = s.bio || '';
+  document.getElementById('membre-profil-spec').value = s.spec || '';
+}
+
+function renderApprenantSpace(){
+  const s = getSession(); if(!s) return;
+  initProgressions(s.email);
+  const prog = getProgressions(s.email);
+  const hours = prog.reduce((a,p)=>a+p.hours,0);
+  const modules = prog.reduce((a,p)=>a+p.module,0);
+  document.getElementById('apprenant-avatar').textContent = s.avatar || '🎓';
+  document.getElementById('apprenant-name').textContent = s.name;
+  document.getElementById('apprenant-welcome').textContent = 'Bonjour ' + s.name.split(' ')[0] + ' 👋';
+  document.getElementById('apprenant-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-num">${prog.length}</div><div class="kpi-lbl">Formations</div></div>
+    <div class="kpi"><div class="kpi-num">${hours}h</div><div class="kpi-lbl">Temps</div></div>
+    <div class="kpi"><div class="kpi-num">${modules}</div><div class="kpi-lbl">Modules</div></div>
+    <div class="kpi"><div class="kpi-num">${prog.filter(p=>p.module===p.total).length}</div><div class="kpi-lbl">Certificats</div></div>`;
+  document.getElementById('apprenant-preview').innerHTML = prog.map(p=>`
+    <div class="course-row"><div><div class="course-row-title">${p.course}</div><div class="course-row-meta">Module ${p.module}/${p.total} · ${p.last}</div></div><div style="min-width:120px"><div class="progress"><div class="progress-fill" style="width:${(p.module/p.total*100).toFixed(0)}%"></div></div></div></div>`).join('');
+  document.getElementById('apprenant-courses-full').innerHTML = prog.map(p=>`
+    <div class="panel">
+      <div class="panel-head"><h3>${p.course}</h3><span class="badge done">${p.module}/${p.total}</span></div>
+      <div class="progress" style="margin-bottom:10px"><div class="progress-fill" style="width:${(p.module/p.total*100).toFixed(0)}%"></div></div>
+      <p style="font-size:12.5px;margin:0">Temps : ${p.hours}h · Dernière activité : ${p.last}</p>
+      <div class="action-bar"><button class="action-btn view" onclick="toast('Reprise')">▶ Continuer</button><button class="action-btn edit" onclick="openModal('course',1)">✏️</button><button class="action-btn delete" onclick="if(confirm('Abandonner ?'))toast('Abandonnée')">🚫 Abandonner</button></div>
+    </div>`).join('');
+  document.getElementById('apprenant-projects-list').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Mon analyse pauvreté</div><div class="course-row-meta">Publié</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('project',1)">✏️</button><button class="action-btn delete" onclick="deleteProject(1)">🗑️</button></div></div>
+    <div class="course-row"><div><div class="course-row-title">Mon dashboard santé</div><div class="course-row-meta">Brouillon</div></div><div class="action-bar"><button class="action-btn edit" onclick="openModal('project',2)">✏️</button><button class="action-btn delete" onclick="deleteProject(2)">🗑️</button></div></div>`;
+  document.getElementById('apprenant-profil-name').value = s.name;
+  document.getElementById('apprenant-profil-email').value = s.email;
+  document.getElementById('apprenant-profil-bio').value = s.bio || '';
+}
+
+function renderPartenaireSpace(){
+  const s = getSession(); if(!s) return;
+  document.getElementById('partenaire-avatar').textContent = s.avatar || '🤝';
+  document.getElementById('partenaire-name').textContent = s.name;
+  document.getElementById('partenaire-welcome').textContent = 'Bienvenue ' + s.name.split(' ')[0] + ' 🤝';
+  document.getElementById('partenaire-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-num">2</div><div class="kpi-lbl">Collaborations</div></div>
+    <div class="kpi"><div class="kpi-num">3</div><div class="kpi-lbl">Demandes</div></div>
+    <div class="kpi"><div class="kpi-num">1</div><div class="kpi-lbl">Projet actif</div></div>
+    <div class="kpi"><div class="kpi-num">12</div><div class="kpi-lbl">Documents</div></div>`;
+  document.getElementById('partenaire-collabs').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Analyse santé maternelle</div><div class="course-row-meta">Projet UNICEF</div></div><span class="badge in-progress">En cours</span></div>
+    <div class="course-row"><div><div class="course-row-title">Formation Power BI agents</div><div class="course-row-meta">Terminé</div></div><span class="badge done">Terminé</span></div>`;
+  document.getElementById('partenaire-demandes-list').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Analyse indicateurs santé</div><div class="course-row-meta">15/11</div></div><span class="badge in-progress">En cours</span></div>
+    <div class="course-row"><div><div class="course-row-title">Formation Power BI</div><div class="course-row-meta">10/11</div></div><span class="badge done">Terminé</span></div>
+    <div class="course-row"><div><div class="course-row-title">Enquête nutritionnelle</div><div class="course-row-meta">05/11</div></div><span class="badge pending">En attente</span></div>`;
+  document.getElementById('partenaire-opportunites').innerHTML = PROJECTS.slice(0,6).map((p,i)=>`
+    <div class="card card-${['blue','indigo','purple','teal','emerald','pink'][i%6]}">
+      <div style="font-size:34px;margin-bottom:10px">${p.emoji}</div>
+      <h3 style="font-size:16px">${p.title}</h3>
+      <p style="font-size:13px">${p.desc}</p>
+      <button class="btn btn-primary btn-sm" onclick="toast('Demande envoyée')">🤝 Collaborer</button>
+    </div>`).join('');
+  document.getElementById('partenaire-profil-org').value = s.org || '';
+  document.getElementById('partenaire-profil-contact').value = s.email;
+  document.getElementById('partenaire-profil-secteur').value = s.secteur || '';
+}
+
+function renderAdminSpace(){
+  const s = getSession(); if(!s) return;
+  const users = getUsers();
+  document.getElementById('admin-avatar').textContent = s.avatar || '🛡️';
+  document.getElementById('admin-name').textContent = s.name;
+  document.getElementById('admin-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-num">3 128</div><div class="kpi-lbl">Visites</div></div>
+    <div class="kpi"><div class="kpi-num">${users.length}</div><div class="kpi-lbl">Users</div></div>
+    <div class="kpi"><div class="kpi-num">12</div><div class="kpi-lbl">Messages</div></div>
+    <div class="kpi"><div class="kpi-num">312</div><div class="kpi-lbl">Abonnés</div></div>`;
+  document.getElementById('admin-activity').innerHTML = `
+    <div class="course-row"><div><div class="course-row-title">Nouvel article publié</div><div class="course-row-meta">Aline · 2h</div></div><span class="badge new">Nouveau</span></div>
+    <div class="course-row"><div><div class="course-row-title">3 nouveaux abonnés</div><div class="course-row-meta">5h</div></div><span class="badge done">Traité</span></div>
+    <div class="course-row"><div><div class="course-row-title">Projet validé</div><div class="course-row-meta">Hier</div></div><span class="badge done">Traité</span></div>`;
+  document.getElementById('admin-users-body').innerHTML = users.map((u,idx)=>`
+    <tr>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.email}</td>
+      <td><span class="badge ${u.role}">${u.role}</span></td>
+      <td><span class="badge active">Actif</span></td>
+      <td class="actions"><button class="action-btn edit" onclick="openModal('user',${idx})">✏️</button><button class="action-btn delete" onclick="deleteUser(${idx})">🗑️</button></td>
+    </tr>`).join('');
+  document.getElementById('admin-messages-body').innerHTML = [
+    {name:'Marie N.',subj:'Devis enquête',stat:'new',date:'18/11'},
+    {name:'Jean B.',subj:'Dashboard santé',stat:'in-progress',date:'17/11'},
+    {name:'ONG Ubuntu',subj:'Formation Power BI',stat:'new',date:'16/11'},
+    {name:'Sarah K.',subj:'Rejoindre DataLab',stat:'done',date:'14/11'}
+  ].map(m=>`<tr><td><strong>${m.name}</strong></td><td>${m.subj}</td><td><span class="badge ${m.stat}">${m.stat}</span></td><td>${m.date}</td><td class="actions"><button class="action-btn approve" onclick="toast('Traité')">✓</button><button class="action-btn delete" onclick="toast('Archivé')">🗑️</button></td></tr>`).join('');
+  document.getElementById('admin-moderation-body').innerHTML = [
+    {type:'Article',title:'Introduction échantillonnage',author:'Jean-Claude'},
+    {type:'Projet',title:'Prédiction prix café',author:'Aline'},
+    {type:'Commentaire',title:'« Excellent article ! »',author:'Visiteur'},
+    {type:'Ressource',title:'Dataset EDS 2023',author:'Claudine'}
+  ].map(m=>`<tr><td><span class="badge pending">${m.type}</span></td><td>${m.title}</td><td>${m.author}</td><td class="actions"><button class="action-btn approve" onclick="toast('Approuvé ✅')">✓</button><button class="action-btn delete" onclick="toast('Rejeté')">✕</button></td></tr>`).join('');
+  const learners = users.filter(u=>u.role==='apprenant');
+  document.getElementById('admin-progressions').innerHTML = learners.map(u=>{
+    const prog = getProgressions(u.email);
+    const h = prog.reduce((a,p)=>a+p.hours,0);
+    return `<div class="panel">
+      <div class="panel-head"><h3>${u.avatar} ${u.name} <span style="font-size:11px;color:var(--mu);font-weight:400">· ${u.email}</span></h3><span class="badge apprenant">${prog.length} cours · ${h}h</span></div>
+      ${prog.map(p=>`<div class="course-row"><div><div class="course-row-title">${p.course}</div><div class="course-row-meta">Module ${p.module}/${p.total}</div></div><div style="min-width:120px"><div class="progress"><div class="progress-fill" style="width:${(p.module/p.total*100).toFixed(0)}%"></div></div></div></div>`).join('')}
+    </div>`;
+  }).join('') || '<p>Aucun apprenant inscrit.</p>';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. MODALS / CRUD
+   ═══════════════════════════════════════════════════════════════ */
+let currentModal = {type:null,id:null};
+function openModal(type,id=null){
+  currentModal = {type,id};
+  const titles = {project:'Projet',article:'Article',resource:'Ressource',course:'Formation',user:'Utilisateur'};
+  document.getElementById('modal-title').textContent = (id?'Modifier ':'Créer ') + (titles[type]||'élément');
+  let body = '';
+  if(type==='project'){
+    const p = id?PROJECTS.find(x=>x.id===id):{};
+    body = `<div class="form-group"><label>Titre</label><input id="modal-f1" value="${p.title||''}"></div>
+      <div class="form-group"><label>Description</label><textarea id="modal-f2">${p.desc||''}</textarea></div>
+      <div class="form-group"><label>Catégorie</label><input id="modal-f3" value="${p.cat||''}"></div>
+      <div class="form-group"><label>Tags</label><input id="modal-f4" value="${(p.tags||[]).join(', ')}"></div>`;
+  } else if(type==='article'){
+    const a = id?ARTICLES.find(x=>x.id===id):{};
+    body = `<div class="form-group"><label>Titre</label><input id="modal-f1" value="${a.title||''}"></div>
+      <div class="form-group"><label>Extrait</label><textarea id="modal-f2">${a.excerpt||''}</textarea></div>
+      <div class="form-group"><label>Catégorie</label><input id="modal-f3" value="${a.cat||''}"></div>`;
+  } else if(type==='resource'){
+    const r = id?RESSOURCES.find(x=>x.id===id):{};
+    body = `<div class="form-group"><label>Titre</label><input id="modal-f1" value="${r.title||''}"></div>
+      <div class="form-group"><label>Description</label><textarea id="modal-f2">${r.desc||''}</textarea></div>
+      <div class="form-group"><label>Type</label><select id="modal-f3"><option>dataset</option><option>cours</option><option>outil</option></select></div>
+      <div class="form-group"><label>Licence</label><input id="modal-f4" value="${r.license||''}"></div>`;
+  } else if(type==='user'){
+    const u = id!==null?getUsers()[id]:{};
+    body = `<div class="form-group"><label>Nom</label><input id="modal-f1" value="${u.name||''}"></div>
+      <div class="form-group"><label>Email</label><input id="modal-f2" value="${u.email||''}"></div>
+      <div class="form-group"><label>Rôle</label><select id="modal-f3">
+        <option value="membre" ${u.role==='membre'?'selected':''}>Membre</option>
+        <option value="apprenant" ${u.role==='apprenant'?'selected':''}>Apprenant</option>
+        <option value="partenaire" ${u.role==='partenaire'?'selected':''}>Partenaire</option>
+        <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+      </select></div>`;
+  } else if(type==='course'){
+    const c = id?COURSES.find(x=>x.id===id):{};
+    body = `<div class="form-group"><label>Titre</label><input id="modal-f1" value="${c.title||''}"></div>
+      <div class="form-group"><label>Description</label><textarea id="modal-f2">${c.desc||''}</textarea></div>
+      <div class="form-group"><label>Prix</label><input id="modal-f3" value="${c.price||''}"></div>`;
+  }
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal-bg').classList.add('on');
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('on')}
+function saveModal(){
+  const v1 = document.getElementById('modal-f1')?.value;
+  const v2 = document.getElementById('modal-f2')?.value;
+  const v3 = document.getElementById('modal-f3')?.value;
+  if(currentModal.type==='user' && currentModal.id!==null){
+    const users = getUsers();
+    users[currentModal.id] = {...users[currentModal.id],name:v1,email:v2,role:v3};
+    saveUsers(users);renderAdminSpace();
+  }
+  toast('✅ Enregistré');closeModal();
+}
+function deleteProject(id){if(!confirm('Supprimer ce projet ?'))return;toast('🗑️ Projet supprimé')}
+function deleteUser(idx){if(!confirm('Supprimer cet utilisateur ?'))return;const users=getUsers();users.splice(idx,1);saveUsers(users);renderAdminSpace();toast('🗑️ Supprimé')}
+function saveProfile(space){
+  const s = getSession();if(!s)return;
+  s.name = document.getElementById(space+'-profil-name')?.value || s.name;
+  s.bio = document.getElementById(space+'-profil-bio')?.value || s.bio;
+  setSession(s);updateSessionUI();toast('✅ Profil enregistré');
+}
+function exportMyData(){
+  const s = getSession();if(!s)return;
+  const data = {profil:s,progressions:getProgressions(s.email),date:new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);a.download = 'datalab-export-'+s.email+'.json';a.click();
+  toast('📥 Export téléchargé');
+}
+function openProfile(){const s=getSession();if(s){location.hash = '#/'+s.role+'/profil'}else{location.hash='#/connexion'}}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. ROUTEUR (avec sous-pages de catégorie)
+   ═══════════════════════════════════════════════════════════════ */
+const ROUTES = ['accueil','equipe','projets','actualites','formation','bibliotheque','videos','photos','blog','contact','connexion','inscription','membre','apprenant','partenaire','admin','membre-detail','projet-detail','news-detail','course-detail','ressource-detail','video-detail','blog-detail','404'];
+const PROTECTED = {
+  membre:['membre','admin'],
+  apprenant:['apprenant','admin'],
+  partenaire:['partenaire','admin'],
+  admin:['admin']
+};
+const SPACE_ROUTES = {membre:'#/membre',apprenant:'#/apprenant',partenaire:'#/partenaire',admin:'#/admin'};
+
+function getRouteParts(){
+  const hash = location.hash.replace(/^#\/?/,'').split('?')[0];
+  return hash.split('/').filter(Boolean);
+}
+
+function showPage(){
+  const session = getSession();
+  const parts = getRouteParts();
+  const main = parts[0] || 'accueil';
+  const sub = parts[1] || null;
+
+  // Protection
+  if(PROTECTED[main]){
+    if(!session || !PROTECTED[main].includes(session.role)){
+      toast('🔒 Connexion requise');
+      location.hash = '#/connexion';
+      return;
+    }
+  }
+  if((main==='connexion'||main==='inscription') && session){
+    location.hash = SPACE_ROUTES[session.role] || '#/accueil';
+    return;
+  }
+
+  // Alias
+  if(main==='ressources'){location.hash='#/bibliotheque'+(sub?'/'+sub:'');return}
+
+  let zone = 'public';
+  if(main==='membre') zone='membre';
+  else if(main==='apprenant') zone='apprenant';
+  else if(main==='partenaire') zone='partenaire';
+  else if(main==='admin') zone='admin';
+  document.body.setAttribute('data-zone',zone);
+
+  let pageName = main;
+
+  // Sous-pages de catégorie vs. détail
+  if(main==='projets' && sub){
+    if(CATEGORIES.projets.some(c=>c.key===sub)){
+      pageName='projets';renderProjects(sub);
+    } else {
+      pageName='projet-detail';renderProjetDetail(sub);
+    }
+  } else if(main==='actualites' && sub){
+    if(CATEGORIES.actualites.some(c=>c.key===sub)){
+      pageName='actualites';renderNews(sub);
+    } else {
+      pageName='news-detail';renderNewsDetail(sub);
+    }
+  } else if(main==='formation' && sub){
+    if(CATEGORIES.formation.some(c=>c.key===sub)){
+      pageName='formation';renderCourses(sub);
+    } else {
+      pageName='course-detail';renderCourseDetail(sub);
+    }
+  } else if(main==='bibliotheque' && sub){
+    if(CATEGORIES.bibliotheque.some(c=>c.key===sub)){
+      pageName='bibliotheque';renderRessources(sub);
+    } else {
+      pageName='ressource-detail';renderRessourceDetail(sub);
+    }
+  } else if(main==='videos' && sub){
+    if(CATEGORIES.videos.some(c=>c.key===sub)){
+      pageName='videos';renderVideos(sub);
+    } else {
+      pageName='video-detail';renderVideoDetail(sub);
+    }
+  } else if(main==='photos' && sub){
+    if(CATEGORIES.photos.some(c=>c.key===sub)){
+      pageName='photos';renderPhotos(sub);
+    } else {
+      pageName='photos';renderPhotos(null);
+    }
+  } else if(main==='equipe' && sub){
+    pageName='membre-detail';renderMembreDetail(sub);
+  } else if(main==='blog' && sub){
+    pageName='blog-detail';renderBlogDetail(sub);
+  } else {
+    // Rendu par défaut des pages
+    if(main==='projets') renderProjects(null);
+    else if(main==='actualites') renderNews(null);
+    else if(main==='formation') renderCourses(null);
+    else if(main==='bibliotheque') renderRessources(null);
+    else if(main==='videos') renderVideos(null);
+    else if(main==='photos') renderPhotos(null);
+  }
+
+  if(!ROUTES.includes(pageName) && !pageName.endsWith('-detail')) pageName='404';
+
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===pageName));
+  document.querySelectorAll('[data-route]').forEach(a=>a.classList.toggle('active',a.dataset.route===main));
+
+  if(pageName==='membre'){setAppTab('membre',sub||'overview');renderMembreSpace()}
+  else if(pageName==='apprenant'){setAppTab('apprenant',sub||'overview');renderApprenantSpace()}
+  else if(pageName==='partenaire'){setAppTab('partenaire',sub||'overview');renderPartenaireSpace()}
+  else if(pageName==='admin'){setAppTab('admin',sub||'overview');renderAdminSpace()}
+
+  const titles = {accueil:'Accueil',projets:'Projets','projet-detail':'Détail',equipe:'Équipe','membre-detail':'Profil',actualites:'Actualités','news-detail':'Actualité',formation:'Formation','course-detail':'Formation',bibliotheque:'Bibliothèque','ressource-detail':'Ressource',videos:'Vidéos','video-detail':'Vidéo',photos:'Photos',blog:'Blog','blog-detail':'Article',contact:'Contact',connexion:'Connexion',inscription:'Inscription',membre:'Espace membre',apprenant:'Espace apprenant',partenaire:'Espace partenaire',admin:'Admin'};
+  document.title = (titles[pageName]||'Page') + ' · DataLab Burundi';
+
+  window.scrollTo({top:0,behavior:'instant'});
+  closeMenu();
+  setTimeout(()=>{triggerReveals();if(pageName==='accueil') triggerCounters()},60);
+}
+
+function setAppTab(space,tab){
+  document.querySelectorAll(`#${space}-tabs a`).forEach(a=>a.classList.toggle('active',a.dataset.tab===tab));
+  document.querySelectorAll(`[data-page="${space}"] .app-view`).forEach(v=>v.classList.toggle('active',v.dataset.view===tab));
+}
+function navigate(){
+  const p = document.getElementById('progress');
+  p.style.opacity='1';p.style.width='30%';
+  setTimeout(()=>{p.style.width='100%'},80);
+  setTimeout(()=>{p.style.opacity='0';setTimeout(()=>{p.style.width='0'},300)},500);
+  showPage();
+}
+window.addEventListener('hashchange',navigate);
+
+/* ═══════════════════════════════════════════════════════════════
+   11. THEME / MENU / UTILS
+   ═══════════════════════════════════════════════════════════════ */
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme')||'dark';
+  const next = cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  document.getElementById('btn-theme').textContent = next==='dark'?'🌙':'☀️';
+  try{localStorage.setItem('datalab_theme',next)}catch(e){}
+}
+try{
+  const saved = localStorage.getItem('datalab_theme');
+  if(saved){
+    document.documentElement.setAttribute('data-theme',saved);
+    document.getElementById('btn-theme').textContent = saved==='dark'?'🌙':'☀️';
+  }
+}catch(e){}
+function toggleMenu(){document.getElementById('mobile-menu').classList.toggle('on')}
+function closeMenu(){document.getElementById('mobile-menu').classList.remove('on')}
+function scrollTop(){window.scrollTo({top:0,behavior:'smooth'})}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. REVEAL / COMPTEURS / TOAST
+   ═══════════════════════════════════════════════════════════════ */
+const revealObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');revealObserver.unobserve(e.target)}});
+},{threshold:0.15});
+function triggerReveals(){document.querySelectorAll('.page.active .reveal:not(.on)').forEach(el=>revealObserver.observe(el))}
+const counterObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el = e.target,target = +el.dataset.count,dur = 1800,start = performance.now();
+    function tick(now){
+      const t = Math.min(1,(now-start)/dur);
+      el.textContent = Math.round(target*(1 - Math.pow(1-t,3)));
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    counterObserver.unobserve(el);
+  });
+},{threshold:0.5});
+function triggerCounters(){document.querySelectorAll('.page.active [data-count]').forEach(el=>{el.textContent='0';counterObserver.observe(el)})}
+let toastTimer = null;
+function toast(text){
+  const t = document.getElementById('toast');
+  t.textContent = text;t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('on'),2600);
+}
+function submitContact(e){
+  e.preventDefault();
+  const msg = document.getElementById('contact-msg');
+  msg.className = 'form-msg success';
+  msg.textContent = '✅ Message envoyé ! Réponse sous 48h.';
+  document.getElementById('contact-form').reset();
+  toast('✅ Message envoyé');
+  setTimeout(()=>{msg.className='form-msg'},5000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. BACKGROUND
+   ═══════════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W,H,particles = [];
+const CHARS = ['0','1','{','}','<','>','/','*','.','+','='];
+function initBg(){
+  W = canvas.width = innerWidth;H = canvas.height = innerHeight;
+  const count = Math.round(W*H/26000);
+  particles = Array.from({length:count},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.2,vy:0.12+Math.random()*.3,
+    char:CHARS[Math.floor(Math.random()*CHARS.length)],
+    alpha:0.1+Math.random()*.25,size:10+Math.random()*7
+  }));
+}
+addEventListener('resize',initBg);initBg();
+function drawBg(){
+  ctx.clearRect(0,0,W,H);
+  const isLight = document.documentElement.getAttribute('data-theme')==='light';
+  const zone = document.body.getAttribute('data-zone');
+  let c1,c2;
+  if(zone==='membre'){c1='rgba(251,191,36,';c2='rgba(249,115,22,'}
+  else if(zone==='apprenant'){c1='rgba(16,185,129,';c2='rgba(34,211,238,'}
+  else if(zone==='partenaire'){c1='rgba(59,130,246,';c2='rgba(99,102,241,'}
+  else if(zone==='admin'){c1='rgba(239,68,68,';c2='rgba(251,191,36,'}
+  else {c1=isLight?'rgba(8,145,178,':'rgba(34,211,238,';c2=isLight?'rgba(124,58,237,':'rgba(168,85,247,'}
+  for(let i=0;i<particles.length;i++){
+    const a = particles[i];
+    for(let j=i+1;j<particles.length;j++){
+      const b = particles[j],d = Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<100){
+        const op = .08*(1-d/100);
+        ctx.strokeStyle = c1+op+')';ctx.lineWidth = .6;
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      }
+    }
+  }
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.y>H+20){p.y=-20;p.x=Math.random()*W;p.vy=0.12+Math.random()*.3}
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    ctx.font = p.size+"px 'Courier New', monospace";
+    ctx.fillStyle = (Math.random()>0.7?c1:c2)+p.alpha+')';
+    ctx.fillText(p.char,p.x,p.y);
+  });
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+window.addEventListener('scroll',()=>{document.getElementById('back-to-top').classList.toggle('on',window.scrollY>400)});
+
+/* ═══════════════════════════════════════════════════════════════
+   14. INIT
+   ═══════════════════════════════════════════════════════════════ */
+(function init(){
+  initUsers();
+  applyI18n();
+  updateSessionUI();
+  renderTeam();
+  renderProjects(null);
+  renderEvents();
+  renderNews(null);
+  renderCourses(null);
+  renderRessources(null);
+  renderVideos(null);
+  renderPhotos(null);
+  renderBlog();
+  navigate();
+  setTimeout(triggerReveals,100);
+})();
+</script>
+</body>
+</html>
